@@ -21,7 +21,7 @@ Currently only sock connection is supported. A database called `gohive` would be
 
 6. Golang
 
-`GOPATH` should be correctly configured.
+`GOPATH` should be correctly configured. `1.9.4` is tested and recommended.
 
 ## Install
 

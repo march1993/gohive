@@ -29,6 +29,7 @@ const (
 	serviceFilename  = "gohive.service"
 	serviceTemplate  = "./templates/" + serviceFilename
 	serviceGenerated = "./generated/" + serviceFilename
+	systemdOutput    = "/lib/systemd/system/gohive.service"
 )
 
 func registerService() {
@@ -59,7 +60,9 @@ func registerService() {
 	fmt.Print("Creating symbol link for systemd...")
 	if abs, err := filepath.Abs(serviceGenerated); err != nil {
 		panic(err.Error())
-	} else if err := os.Symlink(abs, "/lib/systemd/system/gohive.service"); err != nil {
+	} else if err := os.Remove(systemdOutput); err != nil {
+		panic(err.Error())
+	} else if err := os.Symlink(abs, systemdOutput); err != nil {
 		panic(err.Error())
 	}
 	fmt.Println(" [ok]")
