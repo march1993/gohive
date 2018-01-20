@@ -31,6 +31,8 @@ cd $GOPATH/src/github.com/march1993/gohive
 go build
 ./gohive -install
 ```
+Use the generated token to login the web panel.
+
 
 ## Upgrade
 ```shell

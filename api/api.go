@@ -12,6 +12,7 @@ type Status struct {
 }
 
 const (
+	// general
 	STATUS_SUCCESS = "STATUS_SUCCESS"
 	STATUS_FAILURE = "STATUS_FAILURE"
 
@@ -19,7 +20,13 @@ const (
 	REASON_UNKNOWN           = "REASON_UNKNOWN"
 	REASON_PARAMETER_MISSING = "REASON_PARAMETER_MISSING"
 
+	// authentication
 	AUTH_FAILURE = "AUTH_FAILURE"
+
+	// applications
+	APP_NAME_INVALID     = "APP_NAME_INVALID"
+	APP_NON_EXIST        = "APP_NON_EXIST"
+	APP_ALREADY_EXISTING = "APP_ALREADY_EXISTING"
 )
 
 type Credential struct {

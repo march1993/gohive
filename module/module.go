@@ -16,12 +16,12 @@ type Module interface {
 
 var Modules = map[string]Module{}
 
-// var ModuleList []Module
+var ModuleList = []Module{}
 
 func RegisterModule(name string, module Module) {
 
 	Modules[name] = module
-	// ModuleList = append(ModuleList, module)
+	ModuleList = append(ModuleList, module)
 
 }
 

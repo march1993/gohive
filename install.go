@@ -132,7 +132,7 @@ func registerNginx() {
 }
 
 func updateAdminToken() {
-	fmt.Print("Checking administration token... [ok]")
+	fmt.Println("Checking administration token... [ok]")
 	if admin.GetToken() == "" {
 		token := util.RandomString(32)
 		admin.SetToken(token)

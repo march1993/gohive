@@ -7,6 +7,7 @@ import (
 // Configurations for compilation time
 const LISTEN_HOST_PORT = "127.0.0.1:1033"
 const APP_DIR = "/gohive"
+const SSH_SHELL = "/usr/bin/git-shell"
 
 /**
  *	Configurations stored in database
