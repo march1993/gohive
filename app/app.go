@@ -10,7 +10,11 @@ import (
 	"net/http"
 )
 
-func getAppList(c echo.Context) error {
+type getAppListRequest struct {
+	// empty
+}
+
+func getAppList(c echo.Context, request interface{}) error {
 
 	result := []string{}
 
@@ -40,30 +44,20 @@ type getAppStatusRequest struct {
 	App string
 }
 
-func getAppStatus(c echo.Context) error {
-	req := new(getAppStatusRequest)
+func getAppStatus(c echo.Context, request interface{}) error {
+	req := request.(getAppStatusRequest)
 
-	if err := c.Bind(&req); err != nil {
+	return c.JSON(http.StatusOK, api.Status{
+		Status: api.STATUS_SUCCESS,
+		Result: module.GetAppStatus(req.App),
+	})
 
-		return c.JSON(http.StatusOK, api.Status{
-			Status: api.STATUS_FAILURE,
-			Reason: api.REASON_PARAMETER_MISSING,
-		})
-
-	} else {
-
-		return c.JSON(http.StatusOK, api.Status{
-			Status: api.STATUS_SUCCESS,
-			Result: module.GetAppStatus(req.App),
-		})
-
-	}
 }
 
 func RegisterHandlers(e *echo.Group) {
 
 	e.Use(admin.AuthHandler)
-	e.GET("/getAppList", getAppList)
-	e.GET("/getAppStatus", getAppStatus)
+	e.GET("/getAppList", api.EnsureRequest(getAppList, &getAppListRequest{}))
+	e.GET("/getAppStatus", api.EnsureRequest(getAppStatus, &getAppStatusRequest{}))
 
 }
