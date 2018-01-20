@@ -13,7 +13,7 @@ const APP_DIR = "/gohive"
  */
 
 type Config struct {
-	Key   string `gorm:"primary_key"`
+	Key   string
 	Value string
 }
 
