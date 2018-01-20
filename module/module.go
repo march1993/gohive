@@ -9,6 +9,7 @@ type Module interface {
 	Rename(oldName string, newName string) error
 	Delete(name string) error
 	Status(name string) api.Status
+	Repair(name string) error
 }
 
 var Modules map[string]Module

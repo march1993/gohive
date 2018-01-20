@@ -26,3 +26,7 @@ func (l *linux) Delete(name string) error {
 func (l *linux) Status(name string) api.Status {
 	return api.Status{}
 }
+
+func (l *linux) Repair(name string) error {
+	return nil
+}
