@@ -32,5 +32,5 @@ func (l *linux) Repair(name string) error {
 }
 
 func (l *linux) ListRemoved() []string {
-
+	return []string{}
 }
