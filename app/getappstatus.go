@@ -12,7 +12,7 @@ type getAppStatusRequest struct {
 }
 
 func getAppStatus(c echo.Context, request interface{}) error {
-	req := request.(getAppStatusRequest)
+	req := *request.(*getAppStatusRequest)
 
 	return c.JSON(http.StatusOK, api.Status{
 		Status: api.STATUS_SUCCESS,

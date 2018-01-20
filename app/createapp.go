@@ -12,7 +12,7 @@ type createAppRequest struct {
 }
 
 func createApp(c echo.Context, request interface{}) error {
-	req := request.(createAppRequest)
+	req := *request.(*createAppRequest)
 
 	if checkName(req.App) == false {
 		return c.JSON(http.StatusOK, api.Status{

@@ -38,7 +38,7 @@ func EnsureRequest(handler func(echo.Context, interface{}) error, request interf
 
 	return func(c echo.Context) error {
 
-		if err := c.Bind(&request); err != nil {
+		if err := c.Bind(request); err != nil {
 
 			return c.JSON(http.StatusOK, Status{
 				Status: STATUS_FAILURE,

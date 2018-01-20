@@ -13,6 +13,7 @@ type getAppListRequest struct {
 }
 
 func getAppList(c echo.Context, request interface{}) error {
+	// req := *request.(*getAppListRequest)
 
 	result := []string{}
 
