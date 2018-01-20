@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/march1993/gohive/admin"
 	"github.com/march1993/gohive/config"
+	"github.com/march1993/gohive/util"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -15,6 +17,7 @@ func Install() {
 	testRoot()
 	registerService()
 	registerNginx()
+	updateAdminToken()
 }
 
 func testRoot() {
@@ -126,4 +129,16 @@ func registerNginx() {
 
 	fmt.Println(" [ok]")
 
+}
+
+func updateAdminToken() {
+	fmt.Print("Checking administration token... [ok]")
+	if admin.GetToken() == "" {
+		token := util.RandomString(32)
+		admin.SetToken(token)
+		fmt.Println("Generating new token: >>> " + token + " <<<")
+		fmt.Println("Please use this token to login web panel.")
+	} else {
+		fmt.Println("Already set. Skipping.")
+	}
 }

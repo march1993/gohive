@@ -13,6 +13,9 @@ func TestToken(token string) bool {
 func SetToken(token string) {
 	config.Set("token", token)
 }
+func GetToken() string {
+	return config.Get("token", "")
+}
 
 func AuthHandler(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
