@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"encoding/json"
 	"github.com/labstack/echo"
 	"github.com/march1993/gohive/api"
 	"github.com/march1993/gohive/config"
@@ -22,7 +23,12 @@ func AuthHandler(next echo.HandlerFunc) echo.HandlerFunc {
 
 		credential := new(api.Credential)
 
-		if err := c.Bind(&credential); err != nil {
+		if readCloser, err := c.Request().GetBody(); err != nil {
+			return c.JSON(http.StatusOK, api.Status{
+				Status: api.STATUS_FAILURE,
+				Reason: api.REASON_NETWORK_UNSTABLE,
+			})
+		} else if err := json.NewDecoder(readCloser).Decode(&credential); err != nil {
 			// try get token from headers
 			header := c.Request().Header
 			credential.Token = header.Get("Token")
