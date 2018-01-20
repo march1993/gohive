@@ -1,3 +1,6 @@
+# generated files
+generated
+
 # Binaries for programs and plugins
 *.exe
 *.dll
