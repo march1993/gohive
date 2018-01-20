@@ -29,7 +29,7 @@ Currently only sock connection is supported. A database called `gohive` would be
 go get github.com/march1993/gohive
 cd $GOPATH/src/github.com/march1993/gohive
 go build
-./gohive install
+./gohive -install
 ```
 
 ## Upgrade
