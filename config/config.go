@@ -4,6 +4,14 @@ import (
 	. "github.com/march1993/gohive/db"
 )
 
+// Configurations for compilation time
+const LISTEN_HOST_PORT = "127.0.0.1:1033"
+const APP_DIR = "/gohive"
+
+/**
+ *	Configurations stored in database
+ */
+
 type Config struct {
 	Key   string `gorm:"primary_key"`
 	Value string
