@@ -10,7 +10,7 @@ import (
 
 func main() {
 	fmt.Println("get_conf:" + config.Get("test", "test11"))
-	fmt.Println("set_conf:" + config.Set("test", "test22"))
+	config.Set("test", "test22")
 	fmt.Println("get_conf:" + config.Get("test", "test33"))
 
 	e := echo.New()
