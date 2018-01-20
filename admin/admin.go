@@ -1,11 +1,12 @@
 package admin
 
 import (
+	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/labstack/echo"
 	"github.com/march1993/gohive/api"
 	"github.com/march1993/gohive/config"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -25,23 +26,29 @@ func AuthHandler(next echo.HandlerFunc) echo.HandlerFunc {
 		credential := new(api.Credential)
 
 		// extract token
-		fmt.Println("c.Request():", c.Request())
-		if readCloser, err := c.Request().GetBody(); err != nil {
+		req := c.Request()
+
+		if body, err := ioutil.ReadAll(req.Body); err != nil {
 			return c.JSON(http.StatusOK, api.Status{
 				Status: api.STATUS_FAILURE,
 				Reason: api.REASON_NETWORK_UNSTABLE,
 			})
-		} else if err := json.NewDecoder(readCloser).Decode(&credential); err != nil {
-			// try get token from headers
-			header := c.Request().Header
-			credential.Token = header.Get("Token")
-		}
-
-		// test token
-		if TestToken(credential.Token) {
-			return next(c)
 		} else {
-			return c.JSON(http.StatusOK, api.Status{Status: api.STATUS_FAILURE, Reason: api.AUTH_FAILURE})
+			req.Body.Close()
+			req.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+
+			if err := json.Unmarshal(body, &credential); err != nil {
+				// try get token from headers
+				header := c.Request().Header
+				credential.Token = header.Get("Token")
+			}
+
+			// test token
+			if TestToken(credential.Token) {
+				return next(c)
+			} else {
+				return c.JSON(http.StatusOK, api.Status{Status: api.STATUS_FAILURE, Reason: api.AUTH_FAILURE})
+			}
 		}
 
 	}
