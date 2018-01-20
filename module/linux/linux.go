@@ -19,7 +19,7 @@ func (l *linux) Rename(oldName string, newName string) error {
 	return nil
 }
 
-func (l *linux) Delete(name string) error {
+func (l *linux) Remove(name string) error {
 	return nil
 }
 
@@ -29,4 +29,8 @@ func (l *linux) Status(name string) api.Status {
 
 func (l *linux) Repair(name string) error {
 	return nil
+}
+
+func (l *linux) ListRemoved() []string {
+
 }

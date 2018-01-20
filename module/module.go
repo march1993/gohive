@@ -5,11 +5,13 @@ import (
 )
 
 type Module interface {
-	Create(name string) error
+	Create(name string) error // create application
 	Rename(oldName string, newName string) error
-	Delete(name string) error
-	Status(name string) api.Status
-	Repair(name string) error
+	Remove(name string) error      // remove application
+	Status(name string) api.Status // show status
+
+	Repair(name string) error // Repair an application when it's broken or copied to the hive directory
+	ListRemoved() []string    // List application names whose have been removed
 }
 
 var Modules = map[string]Module{}
