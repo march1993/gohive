@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo/middleware"
 	"github.com/march1993/gohive/app"
 	"github.com/march1993/gohive/config"
+	"net/http"
 )
 
 func Web() {
@@ -18,6 +19,9 @@ func Web() {
 
 	e.Static("/static", "./static")
 	e.File("/favicon.ico", "static/favicon.ico")
+	e.GET("/", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/static/index.html")
+	})
 
 	app.RegisterHandlers(e.Group("/app"))
 
