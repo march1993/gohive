@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"github.com/labstack/echo"
 	"net/http"
 )
@@ -39,12 +38,7 @@ func EnsureRequest(handler func(echo.Context, interface{}) error, request interf
 
 	return func(c echo.Context) error {
 
-		if readCloser, err := c.Request().GetBody(); err != nil {
-			return c.JSON(http.StatusOK, Status{
-				Status: STATUS_FAILURE,
-				Reason: REASON_NETWORK_UNSTABLE,
-			})
-		} else if err := json.NewDecoder(readCloser).Decode(&request); err != nil {
+		if err := c.Bind(&request); err != nil {
 
 			return c.JSON(http.StatusOK, Status{
 				Status: STATUS_FAILURE,
