@@ -1,0 +1,5 @@
+package gohive
+
+func main() {
+
+}
