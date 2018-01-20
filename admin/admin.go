@@ -2,6 +2,7 @@ package admin
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/labstack/echo"
 	"github.com/march1993/gohive/api"
 	"github.com/march1993/gohive/config"
@@ -24,9 +25,7 @@ func AuthHandler(next echo.HandlerFunc) echo.HandlerFunc {
 		credential := new(api.Credential)
 
 		// extract token
-		if c.Request() == nil {
-			panic("c.Request() is nil")
-		}
+		fmt.Println("c.Request():", c.Request())
 		if readCloser, err := c.Request().GetBody(); err != nil {
 			return c.JSON(http.StatusOK, api.Status{
 				Status: api.STATUS_FAILURE,
