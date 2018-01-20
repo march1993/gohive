@@ -69,13 +69,13 @@ func registerService() {
 
 	fmt.Print("Enabling and starting service...")
 	cmd := exec.Command("systemctl", "enable", "gohive.service")
-	if _, err := cmd.CombinedOutput(); err != nil {
-		panic(err.Error())
+	if stdout, err := cmd.CombinedOutput(); err != nil {
+		panic(string(stdout) + err.Error())
 	}
 
 	cmd = exec.Command("systemctl", "start", "gohive.service")
-	if _, err := cmd.CombinedOutput(); err != nil {
-		panic(err.Error())
+	if stdout, err := cmd.CombinedOutput(); err != nil {
+		panic(string(stdout) + err.Error())
 	}
 	fmt.Println(" [ok]")
 
