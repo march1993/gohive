@@ -12,7 +12,7 @@ type Module interface {
 	Repair(name string) error
 }
 
-var Modules map[string]Module
+var Modules = map[string]Module{}
 
 // var ModuleList []Module
 

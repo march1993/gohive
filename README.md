@@ -36,6 +36,7 @@ go build
 ```shell
 cd $GOPATH/src/github.com/march1993/gohive
 git pull
+go get .
 go build
 sudo service gohive restart
 ```
