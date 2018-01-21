@@ -4,7 +4,6 @@ import (
 	"github.com/labstack/echo"
 	"github.com/march1993/gohive/api"
 	"github.com/march1993/gohive/config"
-	"github.com/march1993/gohive/module/linux"
 	"io/ioutil"
 	"net/http"
 	. "strings"
@@ -29,7 +28,7 @@ func getAppList(c echo.Context, request interface{}) error {
 		if file.IsDir() {
 			name := file.Name()
 
-			if !HasSuffix(name, linux.Suffix) {
+			if !HasSuffix(name, config.APP_DATA_SUFFIX) {
 				result = append(result, name)
 			}
 		}
@@ -38,6 +37,7 @@ func getAppList(c echo.Context, request interface{}) error {
 	return c.JSON(http.StatusOK, api.Status{
 		Status: api.STATUS_SUCCESS,
 		Result: result,
+		Info:   "PREFIX:" + config.APP_PREFIX,
 	})
 
 }

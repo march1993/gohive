@@ -4,7 +4,6 @@ import (
 	"github.com/march1993/gohive/api"
 	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
-	"github.com/march1993/gohive/module/linux"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -18,7 +17,7 @@ func init() {
 }
 
 func (g *git) Create(name string) api.Status {
-	unixname := linux.Prefix + name
+	unixname := config.APP_PREFIX + name
 	stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
@@ -45,7 +44,7 @@ func (g *git) Remove(name string) api.Status {
 }
 
 func (g *git) Status(name string) api.Status {
-	unixname := linux.Prefix + name
+	unixname := config.APP_PREFIX + name
 	stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
@@ -65,7 +64,7 @@ func (g *git) Status(name string) api.Status {
 }
 
 func (g *git) Repair(name string) api.Status {
-	unixname := linux.Prefix + name
+	unixname := config.APP_PREFIX + name
 	errs := []string{}
 
 	if stdout, err := exec.Command("runuser",
@@ -92,7 +91,7 @@ func (g *git) ListRemoved() []string {
 }
 
 func GetGitUrl(name string) string {
-	unixname := linux.Prefix + name
+	unixname := config.APP_PREFIX + name
 	return unixname + "@" + config.Get("server_name", "${server_name}") + ":~/repo.git"
 }
 
@@ -103,8 +102,8 @@ const (
 )
 
 func SetGitKeys(name string, keys []string) api.Status {
-	unixname := linux.Prefix + name
-	home := linux.GetHomeDir(name)
+	unixname := config.APP_PREFIX + name
+	home := config.GetHomeDir(name)
 
 	errs := []string{}
 
@@ -117,7 +116,7 @@ func SetGitKeys(name string, keys []string) api.Status {
 	}
 
 	if stdout, err := exec.Command("chown",
-		unixname+":"+linux.Group,
+		unixname+":"+config.APP_GROUP,
 		"-R",
 		home+SSH_DIR).CombinedOutput(); err != nil {
 		errs = append(errs, string(stdout))
@@ -134,7 +133,7 @@ func SetGitKeys(name string, keys []string) api.Status {
 }
 
 func GetGitKeys(name string) api.Status {
-	home := linux.GetHomeDir(name)
+	home := config.GetHomeDir(name)
 
 	if stdout, err := exec.Command("ssh-keygen",
 		"-lf",

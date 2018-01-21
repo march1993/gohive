@@ -5,7 +5,6 @@ import (
 	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
 	_ "github.com/march1993/gohive/module/git"
-	"github.com/march1993/gohive/module/linux"
 	"github.com/march1993/gohive/util"
 	"io"
 	"io/ioutil"
@@ -47,7 +46,7 @@ func (g *golang) Remove(name string) api.Status {
 }
 
 func (g *golang) Status(name string) api.Status {
-	unixname := linux.Prefix + name
+	unixname := config.APP_PREFIX + name
 	stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
@@ -67,7 +66,7 @@ func (g *golang) Status(name string) api.Status {
 }
 
 func (g *golang) Repair(name string) api.Status {
-	unixname := linux.Prefix + name
+	unixname := config.APP_PREFIX + name
 	errs := []string{}
 
 	if stdout, err := exec.Command("runuser",

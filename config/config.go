@@ -1,7 +1,9 @@
 package config
 
 import (
+	"encoding/json"
 	. "github.com/march1993/gohive/db"
+	"io/ioutil"
 )
 
 // Configurations for compilation time
@@ -13,9 +15,16 @@ const (
 	APP_DIR_O_GROUP    = 0 // APP_DIR Group
 	GOLANG_DIR         = "/gohive.go"
 	GOLANG_DIR_PERM    = 0755
-	GOLANG_DIR_O_USER  = 0 // GOLANG_DIR Owner
-	GOLANG_DIR_O_GROUP = 0 // GOLANG_DIR Group
-	SSH_SHELL          = "/usr/bin/git-shell"
+	GOLANG_DIR_O_USER  = 0           // GOLANG_DIR Owner
+	GOLANG_DIR_O_GROUP = 0           // GOLANG_DIR Group
+	SSH_SHELL          = "/bin/bash" // "/usr/bin/git-shell"
+)
+
+// Linux setting
+const (
+	APP_PREFIX      = "gohive_app_"
+	APP_GROUP       = "gohive_app"
+	APP_DATA_SUFFIX = ".data"
 )
 
 /**
@@ -23,11 +32,11 @@ const (
  */
 
 func GetHomeDir(name string) string {
-	return config.APP_DIR + "/" + Prefix + name
+	return APP_DIR + "/" + APP_PREFIX + name
 }
 
 func GetDataDir(name string) string {
-	return config.APP_DIR + "/" + Prefix + name + Suffix
+	return APP_DIR + "/" + APP_PREFIX + name + APP_DATA_SUFFIX
 }
 
 /**
@@ -59,10 +68,49 @@ func Set(key string, value string) {
 	DB.Where(Config{Key: key}).Assign(Config{Value: value}).FirstOrCreate(&Config{})
 }
 
-func AppConfigGet(name, key, voreinstellung string) string {
-
+func getConfigFile(name, module string) string {
+	return GetDataDir(name) + "/" + module + ".conf.json"
 }
 
-func AppConfigSet(name, key, value string) string {
+type ConfigList map[string]string
+
+func AppConfigGet(name, module, key, voreinstellung string) string {
+	config := getConfigFile(name, module)
+
+	bytes, err := ioutil.ReadFile(config)
+	if err != nil {
+		return voreinstellung
+	}
+
+	configList := ConfigList{}
+
+	if err := json.Unmarshal(bytes, &configList); err != nil {
+		return voreinstellung
+	}
+
+	if configList[key] == "" {
+		return voreinstellung
+	} else {
+		return configList[key]
+	}
+}
+
+func AppConfigSet(name, module, key, value string) {
+	config := getConfigFile(name, module)
+
+	configList := ConfigList{}
+
+	bytes, err := ioutil.ReadFile(config)
+	if err == nil {
+		json.Unmarshal(bytes, &configList)
+	}
+
+	configList[key] = value
+
+	bytes, err = json.Marshal(configList)
+	if err != nil {
+		panic(err.Error())
+	}
+	ioutil.WriteFile(config, bytes, 0644)
 
 }
