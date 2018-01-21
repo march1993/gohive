@@ -102,9 +102,6 @@ func (g *golang) Repair(name string) api.Status {
 		}
 	}
 
-	// TODO: refresh environ
-	// TODO: restart systemd service
-
 	return api.Status{Status: api.STATUS_SUCCESS}
 
 }
