@@ -287,6 +287,7 @@ func (l *linux) Repair(name string) api.Status {
 }
 
 func (l *linux) ListRemoved() []string {
+	// 1. list remaining users
 	cmd := exec.Command("members", Group)
 	stdout, err := cmd.CombinedOutput()
 	if err != nil {
@@ -302,6 +303,8 @@ func (l *linux) ListRemoved() []string {
 			ret = append(ret, member)
 		}
 	}
+
+	// 2. TODO: list remaining process whose owner has been deleted
 
 	return ret
 }
