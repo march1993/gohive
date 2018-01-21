@@ -2,8 +2,11 @@ package git
 
 import (
 	"github.com/march1993/gohive/api"
+	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
 	"github.com/march1993/gohive/module/linux"
+	"io/ioutil"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -91,4 +94,38 @@ func (g *git) Repair(name string) api.Status {
 
 func (g *git) ListRemoved() []string {
 	return []string{}
+}
+
+func GetGitUrl(name string) string {
+	unixname := linux.Prefix + name
+	return unixname + "@" + config.Get("server_name", "${server_name}") + ":~/.git"
+}
+
+const (
+	SSH_DIR      = "/.ssh"
+	SSH_KEY_FILE = SSH_DIR + "/authorized_keys"
+	SSH_KEY_PERM = 0644
+)
+
+func SetGitKeys(name string, keys []string) api.Status {
+	home := linux.GetHomeDir(name)
+
+	errs := []string{}
+
+	if err := os.MkdirAll(home+SSH_DIR, 0700); err != nil {
+		errs = append(errs, err.Error())
+	}
+
+	if err := ioutil.WriteFile(home+SSH_KEY_FILE, []byte(strings.Join(keys, "\n")), SSH_KEY_PERM); err != nil {
+		errs = append(errs, err.Error())
+	}
+
+	if len(errs) > 0 {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: strings.Join(errs, "\n"),
+		}
+	} else {
+		return api.Status{Status: api.STATUS_SUCCESS}
+	}
 }

@@ -26,4 +26,7 @@ func RegisterHandlers(e *echo.Group) {
 	e.POST("/renameApp", api.EnsureRequest(renameApp, &renameAppRequest{}))
 	e.POST("/listRemovedApp", api.EnsureRequest(listRemovedApp, &listRemovedAppRequest{}))
 
+	e.POST("/getGitUrl", api.EnsureRequest(getGitUrl, &getGitUrlRequest{}))
+	e.POST("/setGitKeys", api.EnsureRequest(setGitKeys, &setGitKeysRequest{}))
+
 }
