@@ -222,6 +222,19 @@ func (l *linux) Status(name string) api.Status {
 		parital = true
 	}
 
+	// check chmod
+	if err := testCmdHelper("700", "stat", "-c", "%a", getHomeDir(name)); err != nil {
+		errs = append(errs, err.Error())
+	} else {
+		parital = true
+	}
+
+	if err := testCmdHelper("700", "stat", "-c", "%a", getDataDir(name)); err != nil {
+		errs = append(errs, err.Error())
+	} else {
+		parital = true
+	}
+
 	if len(errs) > 0 {
 		if parital {
 			return api.Status{
@@ -265,6 +278,17 @@ func (l *linux) Repair(name string) api.Status {
 		getDataDir(name)).CombinedOutput()
 	if err != nil {
 		errs = append(errs, string(stdout))
+	}
+
+	// chmod
+	err = os.Chmod(getHomeDir(name), 0700)
+	if err != nil {
+		errs = append(errs, err.Error())
+	}
+
+	err = os.Chmod(getDataDir(name), 0700)
+	if err != nil {
+		errs = append(errs, err.Error())
 	}
 
 	// fix group
