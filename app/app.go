@@ -36,7 +36,7 @@ func RegisterHandlers(e *echo.Group) {
 	e.POST("/setGitKeys", api.EnsureRequest(setGitKeys, &setGitKeysRequest{}))
 	e.POST("/getGitKeys", api.EnsureRequest(getGitKeys, &getGitKeysRequest{}))
 
-	e.POST("/getGolangList", api.EnsureRequest(getGolangList, &getGitKeysRequest{}))
-	e.POST("/setGolangInstallation", api.EnsureRequest(setGolangInstallation, &getGitKeysRequest{}))
+	e.POST("/getGolangList", api.EnsureRequest(getGolangList, &getGolangListRequest{}))
+	e.POST("/setGolangInstallation", api.EnsureRequest(setGolangInstallation, &setGolangInstallationRequest{}))
 
 }
