@@ -240,6 +240,7 @@ func (l *linux) Status(name string) api.Status {
 			return api.Status{
 				Status: api.STATUS_FAILURE,
 				Reason: api.APP_BROKEN,
+				Result: strings.Join(errs, "\n"),
 			}
 		} else {
 			return api.Status{
