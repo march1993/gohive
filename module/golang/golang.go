@@ -18,6 +18,7 @@ type golang struct{}
 
 func init() {
 	module.RegisterModule("golang", &golang{})
+	module.RegisterEnviron(environHandler)
 	if err := os.MkdirAll(config.GOLANG_DIR, config.GOLANG_DIR_PERM); err != nil {
 		panic(err.Error())
 	}
@@ -28,6 +29,12 @@ func init() {
 		panic(err.Error())
 	}
 
+}
+
+func environHandler(name string) map[string]string {
+	return map[string]string{
+		"1": "@",
+	}
 }
 
 func (g *golang) Create(name string) api.Status {
