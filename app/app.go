@@ -42,5 +42,6 @@ func RegisterHandlers(e *echo.Group) {
 
 	e.POST("/getGolangList", api.EnsureRequest(getGolangList, &getGolangListRequest{}))
 	e.POST("/setGolangInstallation", api.EnsureRequest(setGolangInstallation, &setGolangInstallationRequest{}))
+	e.POST("/setGolangVersion", api.EnsureRequest(setGolangVersion, &setGolangVersionRequest{}))
 
 }
