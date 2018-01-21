@@ -29,7 +29,7 @@ const (
 
 // Golang setting
 const (
-	GOLANG_GOPATH = ""
+	GOLANG_GOPATH = "$HOME/workspace:$HOME/workspace/vendor"
 )
 
 /**

@@ -29,8 +29,8 @@ func (p *profile) Create(name string) api.Status {
 
 	for _, handler := range module.Environ {
 		kvs := handler(name)
-		for k, v := range kvs {
-			content += k + "=" + v + "\n"
+		for _, line := range kvs {
+			content += line + "\n"
 		}
 	}
 
