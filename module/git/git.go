@@ -18,7 +18,7 @@ func (g *git) Create(name string) api.Status {
 	stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
-		"-c", "cd . && git init .",
+		"-c", "cd ~ && git init .",
 	).CombinedOutput()
 	if err != nil {
 		return api.Status{
@@ -45,7 +45,7 @@ func (g *git) Status(name string) api.Status {
 	stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
-		"-c", "cd . && git status",
+		"-c", "cd ~ && git status",
 	).CombinedOutput()
 	if err != nil {
 		return api.Status{
@@ -62,7 +62,7 @@ func (g *git) Repair(name string) api.Status {
 	stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
-		"-c", "cd . && git checkout .",
+		"-c", "cd ~ && git checkout .",
 	).CombinedOutput()
 	if err != nil {
 		return api.Status{
