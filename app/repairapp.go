@@ -8,7 +8,7 @@ import (
 )
 
 type repairAppRequest struct {
-	App string
+	AppRequest
 }
 
 func repairApp(c echo.Context, request interface{}) error {

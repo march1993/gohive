@@ -46,10 +46,19 @@ func (g *golang) Remove(name string) api.Status {
 }
 
 func (g *golang) Status(name string) api.Status {
+
+	version := config.AppConfigGet(name, "golang", "version", "")
+
+	if version == "" {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: api.GOLANG_VERSION_UNSET,
+		}
+	}
+
 	unixname := config.APP_PREFIX + name
 	stdout, err := exec.Command("runuser",
 		unixname,
-		"-s", "/bin/bash",
 		"-c", "go version",
 	).CombinedOutput()
 	if err != nil {
@@ -58,33 +67,46 @@ func (g *golang) Status(name string) api.Status {
 			Reason: string(stdout),
 		}
 	} else {
-		return api.Status{
-			Status: api.STATUS_SUCCESS,
-			Result: string(stdout),
+		if strings.Contains(string(stdout), version) {
+			return api.Status{Status: api.STATUS_SUCCESS}
+		} else {
+			return api.Status{
+				Status: api.STATUS_FAILURE,
+				Reason: api.GOLANG_VERSION_MISMATCHING,
+				Addition: map[string]string{
+					"Desired":   version,
+					"Presented": string(stdout),
+				},
+			}
 		}
+
 	}
 }
 
+func SetGolangVersion(name string, version string) {
+	config.AppConfigSet(name, "golang", "version", version)
+}
+
 func (g *golang) Repair(name string) api.Status {
-	unixname := config.APP_PREFIX + name
-	errs := []string{}
+	// unixname := config.APP_PREFIX + name
 
-	if stdout, err := exec.Command("runuser",
-		unixname,
-		"-s", "/bin/bash",
-		"-c", "cd ~ && go get .",
-	).CombinedOutput(); err != nil {
-		errs = append(errs, string(stdout))
-	}
+	version := config.AppConfigGet(name, "golang", "version", "")
 
-	if len(errs) > 0 {
-		return api.Status{
-			Status: api.STATUS_FAILURE,
-			Reason: strings.Join(errs, "\n"),
+	list := GetGolangList()
+
+	// don't have certain version of golang, download it
+	if !util.Includes(list, GO_PREFIX+version) {
+		status := SetGolangInstallation(version)
+		if status.Status != api.STATUS_SUCCESS {
+			return status
 		}
-	} else {
-		return api.Status{Status: api.STATUS_SUCCESS}
 	}
+
+	// TODO: refresh environ
+	// TODO: restart systemd service
+
+	return api.Status{Status: api.STATUS_SUCCESS}
+
 }
 
 func (g *golang) ListRemoved() []string {
@@ -96,17 +118,14 @@ const (
 	GO_DOWNLOAD_PATH = "https://dl.google.com/go/go{{VERSION}}.linux-amd64.tar.gz"
 )
 
-func GetGolangList() api.Status {
+func GetGolangList() []string {
 
 	result := []string{}
 
 	files, err := ioutil.ReadDir(config.GOLANG_DIR)
 
 	if err != nil {
-		return api.Status{
-			Status: api.STATUS_FAILURE,
-			Reason: err.Error(),
-		}
+		panic(err.Error())
 	}
 
 	for _, file := range files {
@@ -119,10 +138,7 @@ func GetGolangList() api.Status {
 		}
 	}
 
-	return api.Status{
-		Status: api.STATUS_SUCCESS,
-		Result: result,
-	}
+	return result
 }
 
 func SetGolangInstallation(version string) api.Status {

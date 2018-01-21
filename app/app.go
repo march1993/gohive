@@ -20,6 +20,10 @@ func init() {
 	}
 }
 
+type AppRequest struct {
+	App string
+}
+
 func RegisterHandlers(e *echo.Group) {
 
 	e.Use(admin.AuthHandler)
