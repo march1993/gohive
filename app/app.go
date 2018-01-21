@@ -28,5 +28,6 @@ func RegisterHandlers(e *echo.Group) {
 
 	e.POST("/getGitUrl", api.EnsureRequest(getGitUrl, &getGitUrlRequest{}))
 	e.POST("/setGitKeys", api.EnsureRequest(setGitKeys, &setGitKeysRequest{}))
+	e.POST("/getGitKeys", api.EnsureRequest(getGitKeys, &getGitKeysRequest{}))
 
 }
