@@ -12,7 +12,8 @@ import (
 var WorkingDirectory, ExecStart string
 
 func init() {
-	ExecStart, err := os.Executable()
+	var err error
+	ExecStart, err = os.Executable()
 	if err != nil {
 		panic(err.Error())
 	}
