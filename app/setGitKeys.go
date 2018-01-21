@@ -8,7 +8,7 @@ import (
 )
 
 type setGitKeysRequest struct {
-	AppRequest
+	App  string
 	Keys []string
 }
 

@@ -7,7 +7,9 @@ import (
 	"net/http"
 )
 
-type repairAppRequest AppRequest
+type repairAppRequest struct {
+	App string
+}
 
 func repairApp(c echo.Context, request interface{}) error {
 	req := *request.(*repairAppRequest)

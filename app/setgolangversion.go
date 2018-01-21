@@ -8,7 +8,7 @@ import (
 )
 
 type setGolangVersionRequest struct {
-	AppRequest
+	App     string
 	Version string
 }
 
@@ -31,6 +31,6 @@ func setGolangVersion(c echo.Context, request interface{}) error {
 
 	golang.SetGolangVersion(req.App, req.Version)
 
-	return repairApp(c, request)
+	return repairApp(c, repairAppRequest{App: req.App})
 
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type createAppRequest struct {
-	AppRequest
+	App string
 }
 
 func createApp(c echo.Context, request interface{}) error {

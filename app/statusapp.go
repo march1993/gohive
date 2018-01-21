@@ -8,7 +8,7 @@ import (
 )
 
 type statusAppRequest struct {
-	AppRequest
+	App string
 }
 
 func statusApp(c echo.Context, request interface{}) error {

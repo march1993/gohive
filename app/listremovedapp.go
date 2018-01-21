@@ -8,7 +8,7 @@ import (
 )
 
 type listRemovedAppRequest struct {
-	AppRequest
+	App string
 }
 
 func listRemovedApp(c echo.Context, request interface{}) error {

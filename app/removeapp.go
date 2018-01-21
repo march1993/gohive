@@ -8,7 +8,7 @@ import (
 )
 
 type removeAppRequest struct {
-	AppRequest
+	App string
 }
 
 func removeApp(c echo.Context, request interface{}) error {

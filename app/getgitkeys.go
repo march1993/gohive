@@ -8,7 +8,7 @@ import (
 )
 
 type getGitKeysRequest struct {
-	AppRequest
+	App string
 }
 
 func getGitKeys(c echo.Context, request interface{}) error {
