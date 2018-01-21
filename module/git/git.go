@@ -5,6 +5,7 @@ import (
 	"github.com/march1993/gohive/module"
 	"github.com/march1993/gohive/module/linux"
 	"os/exec"
+	"strings"
 )
 
 type git struct{}
@@ -59,15 +60,28 @@ func (g *git) Status(name string) api.Status {
 
 func (g *git) Repair(name string) api.Status {
 	unixname := linux.Prefix + name
-	stdout, err := exec.Command("runuser",
+	errs := []string{}
+
+	if stdout, err := exec.Command("runuser",
+		unixname,
+		"-s", "/bin/bash",
+		"-c", "cd ~ && git init .",
+	).CombinedOutput(); err != nil {
+		errs = append(errs, string(stdout))
+	}
+
+	if stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
 		"-c", "cd ~ && git checkout .",
-	).CombinedOutput()
-	if err != nil {
+	).CombinedOutput(); err != nil {
+		errs = append(errs, string(stdout))
+	}
+
+	if len(errs) > 0 {
 		return api.Status{
 			Status: api.STATUS_FAILURE,
-			Reason: string(stdout),
+			Reason: strings.Join(errs, "\n"),
 		}
 	} else {
 		return api.Status{Status: api.STATUS_SUCCESS}
