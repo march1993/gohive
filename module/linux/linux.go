@@ -29,14 +29,6 @@ func init() {
 
 }
 
-func GetHomeDir(name string) string {
-	return config.APP_DIR + "/" + Prefix + name
-}
-
-func GetDataDir(name string) string {
-	return config.APP_DIR + "/" + Prefix + name + Suffix
-}
-
 func (l *linux) Create(name string) api.Status {
 
 	if l.Status(name).Reason == api.APP_NON_EXIST {
@@ -51,7 +43,7 @@ func (l *linux) Create(name string) api.Status {
 			unixname)
 		stdout, err := cmd.CombinedOutput()
 
-		os.MkdirAll(GetDataDir(name), 0700)
+		os.MkdirAll(config.GetDataDir(name), 0700)
 
 		if err != nil {
 			return api.Status{
@@ -100,13 +92,13 @@ func (l *linux) Rename(oldName string, newName string) api.Status {
 		// 2. rename user
 		if stdout, err := exec.Command("usermod",
 			"-l", Prefix+newName,
-			"-m", "-d", GetHomeDir(newName),
+			"-m", "-d", config.GetHomeDir(newName),
 			Prefix+oldName).CombinedOutput(); err != nil {
 			errs = append(errs, string(stdout))
 		}
 
 		// 3. rename folders
-		if err := os.Rename(GetDataDir(oldName), GetDataDir(newName)); err != nil {
+		if err := os.Rename(config.GetDataDir(oldName), config.GetDataDir(newName)); err != nil {
 			errs = append(errs, err.Error())
 		}
 
@@ -146,10 +138,10 @@ func (l *linux) Remove(name string) api.Status {
 		}
 
 		// 3. remove the directories
-		if err := os.RemoveAll(GetHomeDir(name)); err != nil {
+		if err := os.RemoveAll(config.GetHomeDir(name)); err != nil {
 			errs = append(errs, err.Error())
 		}
-		if err := os.RemoveAll(GetDataDir(name)); err != nil {
+		if err := os.RemoveAll(config.GetDataDir(name)); err != nil {
 			errs = append(errs, err.Error())
 		}
 
@@ -198,38 +190,38 @@ func (l *linux) Status(name string) api.Status {
 	}
 
 	// check files
-	if err := testCmdHelper(unixname, "stat", "-c", "%U", GetHomeDir(name)); err != nil {
+	if err := testCmdHelper(unixname, "stat", "-c", "%U", config.GetHomeDir(name)); err != nil {
 		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
-	if err := testCmdHelper(Group, "stat", "-c", "%G", GetHomeDir(name)); err != nil {
+	if err := testCmdHelper(Group, "stat", "-c", "%G", config.GetHomeDir(name)); err != nil {
 		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
-	if err := testCmdHelper("root", "stat", "-c", "%U", GetDataDir(name)); err != nil {
+	if err := testCmdHelper("root", "stat", "-c", "%U", config.GetDataDir(name)); err != nil {
 		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
-	if err := testCmdHelper("root", "stat", "-c", "%G", GetDataDir(name)); err != nil {
+	if err := testCmdHelper("root", "stat", "-c", "%G", config.GetDataDir(name)); err != nil {
 		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
 	// check chmod
-	if err := testCmdHelper("700", "stat", "-c", "%a", GetHomeDir(name)); err != nil {
+	if err := testCmdHelper("700", "stat", "-c", "%a", config.GetHomeDir(name)); err != nil {
 		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
-	if err := testCmdHelper("700", "stat", "-c", "%a", GetDataDir(name)); err != nil {
+	if err := testCmdHelper("700", "stat", "-c", "%a", config.GetDataDir(name)); err != nil {
 		errs = append(errs, err.Error())
 	} else {
 		parital = true
@@ -264,10 +256,10 @@ func (l *linux) Repair(name string) api.Status {
 
 	errs := []string{}
 	// ensure directories exist
-	if err := os.MkdirAll(GetHomeDir(name), 0700); err != nil {
+	if err := os.MkdirAll(config.GetHomeDir(name), 0700); err != nil {
 		errs = append(errs, err.Error())
 	}
-	if err := os.MkdirAll(GetDataDir(name), 0700); err != nil {
+	if err := os.MkdirAll(config.GetDataDir(name), 0700); err != nil {
 		errs = append(errs, err.Error())
 	}
 	// fix files owners
@@ -275,7 +267,7 @@ func (l *linux) Repair(name string) api.Status {
 	stdout, err := exec.Command("chown",
 		unixname+":"+Group,
 		"-R",
-		GetHomeDir(name)).CombinedOutput()
+		config.GetHomeDir(name)).CombinedOutput()
 	if err != nil {
 		errs = append(errs, string(stdout))
 	}
@@ -283,18 +275,18 @@ func (l *linux) Repair(name string) api.Status {
 	stdout, err = exec.Command("chown",
 		"root:root",
 		"-R",
-		GetDataDir(name)).CombinedOutput()
+		config.GetDataDir(name)).CombinedOutput()
 	if err != nil {
 		errs = append(errs, string(stdout))
 	}
 
 	// chmod
-	err = os.Chmod(GetHomeDir(name), 0700)
+	err = os.Chmod(config.GetHomeDir(name), 0700)
 	if err != nil {
 		errs = append(errs, err.Error())
 	}
 
-	err = os.Chmod(GetDataDir(name), 0700)
+	err = os.Chmod(config.GetDataDir(name), 0700)
 	if err != nil {
 		errs = append(errs, err.Error())
 	}

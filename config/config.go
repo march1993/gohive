@@ -19,6 +19,18 @@ const (
 )
 
 /**
+ *	Directories
+ */
+
+func GetHomeDir(name string) string {
+	return config.APP_DIR + "/" + Prefix + name
+}
+
+func GetDataDir(name string) string {
+	return config.APP_DIR + "/" + Prefix + name + Suffix
+}
+
+/**
  *	Configurations stored in database
  */
 
@@ -45,4 +57,12 @@ func Get(key string, voreinstellung string) string {
 
 func Set(key string, value string) {
 	DB.Where(Config{Key: key}).Assign(Config{Value: value}).FirstOrCreate(&Config{})
+}
+
+func AppConfigGet(name, key, voreinstellung string) string {
+
+}
+
+func AppConfigSet(name, key, value string) string {
+
 }
