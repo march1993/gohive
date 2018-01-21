@@ -132,7 +132,7 @@ func GetGolangList() []string {
 		if file.IsDir() {
 			name := file.Name()
 
-			if !strings.HasPrefix(name, GO_PREFIX) {
+			if strings.HasPrefix(name, GO_PREFIX) {
 				result = append(result, name)
 			}
 		}
