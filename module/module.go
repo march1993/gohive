@@ -11,7 +11,7 @@ type Module interface {
 	Status(name string) api.Status // show status
 	Repair(name string) api.Status // Repair an application when it's broken or copied to the hive directory
 
-	ListRemoved() []string // List application names whose have been removed
+	ListRemoved() []string // List application names those have been removed
 }
 
 type moduleItem struct {
