@@ -21,6 +21,9 @@ Currently only sock connection is supported. A database called `gohive` would be
 
 6. Golang
 
+7. members
+`members` is used to list users under a certain group.
+
 `GOPATH` should be correctly configured. `1.9.4` is tested and recommended.
 
 ## Install

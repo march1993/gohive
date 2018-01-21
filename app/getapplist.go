@@ -20,10 +20,7 @@ func getAppList(c echo.Context, request interface{}) error {
 	files, err := ioutil.ReadDir(config.APP_DIR)
 
 	if err != nil {
-		return c.JSON(http.StatusOK, api.Status{
-			Status: api.STATUS_SUCCESS,
-			Result: result,
-		})
+		panic(err.Error())
 	}
 
 	for _, file := range files {
