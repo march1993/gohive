@@ -76,6 +76,11 @@ func (l *linux) Rename(oldName string, newName string) api.Status {
 			Status: api.STATUS_FAILURE,
 			Reason: api.REASON_CONDITION_UNMET,
 		}
+	} else if l.Status(newName).Reason != api.APP_NON_EXIST {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: api.APP_ALREADY_OCCUPIED,
+		}
 	} else {
 
 		errs := []string{}
