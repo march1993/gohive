@@ -78,12 +78,29 @@ func (l *linux) Rename(oldName string, newName string) api.Status {
 	} else {
 		// TODO:
 		// 1. kill all process
+		cmd := exec.Command("killall", "--user", Prefix+oldName)
+		cmd.CombinedOutput()
+
 		// 2. rename user
 		// 3. rename folders
-		return api.Status{
-			Status: api.STATUS_FAILURE,
-			Reason: api.REASON_UNKNOWN,
+		cmd = exec.Command("usermod",
+			"-l", Prefix+newName,
+			"-m", "-d", getHomeDir(newName),
+			Prefix+oldName)
+		stdout, err := cmd.CombinedOutput()
+		if err != nil {
+			panic(string(stdout) + err.Error())
 		}
+
+		cmd = exec.Command("mv",
+			getDataDir(oldName),
+			getDataDir(newName))
+		stdout, err = cmd.CombinedOutput()
+		if err != nil {
+			panic(string(stdout) + err.Error())
+		}
+
+		return api.Status{Status: api.STATUS_SUCCESS}
 	}
 }
 
@@ -223,7 +240,7 @@ func (l *linux) ListRemoved() []string {
 	cmd := exec.Command("members", Group)
 	stdout, err := cmd.CombinedOutput()
 	if err != nil {
-		panic(err)
+		panic(string(stdout) + err.Error())
 	}
 
 	members := strings.Split(strings.Trim(string(stdout), "\n"), " ")
