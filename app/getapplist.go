@@ -37,7 +37,9 @@ func getAppList(c echo.Context, request interface{}) error {
 	return c.JSON(http.StatusOK, api.Status{
 		Status: api.STATUS_SUCCESS,
 		Result: result,
-		Info:   "PREFIX:" + config.APP_PREFIX,
+		Addition: map[string]string{
+			"PREFIX:": config.APP_PREFIX,
+		},
 	})
 
 }
