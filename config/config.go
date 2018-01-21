@@ -27,6 +27,11 @@ const (
 	APP_DATA_SUFFIX = ".data"
 )
 
+// Golang setting
+const (
+	GOLANG_GOPATH = ""
+)
+
 /**
  *	Directories
  */

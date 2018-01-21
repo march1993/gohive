@@ -53,3 +53,7 @@ sudo service gohive restart
 3. Golang support
 4. Nginx settings (including SSL) support
 5. Mysql support
+
+
+## Customize
+You can put `.gohive.bashrc` into the root of your repository to change environments like GOPATH.

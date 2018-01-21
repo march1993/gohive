@@ -32,8 +32,14 @@ func init() {
 }
 
 func environHandler(name string) map[string]string {
+
+	version := config.AppConfigGet(name, "golang", "version", "")
+	goroot := config.GOLANG_DIR + "/" + GO_PREFIX + version
+
 	return map[string]string{
-		"1": "@",
+		"GOPATH": config.GOLANG_GOPATH,
+		"GOROOT": goroot,
+		"PATH":   "$GOROOT/bin:$PATH",
 	}
 }
 
