@@ -49,7 +49,7 @@ func (g *git) Status(name string) api.Status {
 	stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
-		"-c", "cd ~/repo.git && git status",
+		"-c", "cd ~/repo.git && git branch -a",
 	).CombinedOutput()
 	if err != nil {
 		return api.Status{
