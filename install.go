@@ -110,7 +110,7 @@ func registerNginx() {
 	content := string(bytes)
 	content = Replace(content, "{{Root}}", workingDirectory, -1)
 	content = Replace(content, "{{ServerName}}", serverName, -1)
-	content = Replace(content, "{{AppDir}}", config.APP_DIR, -1)
+	content = Replace(content, "{{APP_DIR}}", config.APP_DIR, -1)
 	if err = ioutil.WriteFile(nginxGenerated, []byte(content), 0644); err != nil {
 		panic(err.Error())
 	}
