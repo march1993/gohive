@@ -6,6 +6,7 @@ import (
 	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
 	"os/exec"
+	"syscall"
 )
 
 type linux struct{}
@@ -22,13 +23,20 @@ func init() {
 	if stdout, err := cmd.CombinedOutput(); err != nil {
 		panic(string(stdout) + err.Error())
 	}
+
+	syscall.Umask(0077)
 }
 func (l *linux) Create(name string) error {
 
 	if l.Status(name).Status == api.APP_NON_EXIST {
 		unixname := Prefix + name
 
-		cmd := exec.Command("useradd", "-b", config.APP_DIR, "-m", "-s", config.SSH_SHELL, "-G", Group, unixname)
+		cmd := exec.Command("useradd",
+			"-b", config.APP_DIR, // home directory
+			"-m",                   // create home
+			"-s", config.SSH_SHELL, // shell
+			"-g", Group, // group
+			unixname)
 		stdout, err := cmd.CombinedOutput()
 
 		if err != nil {
