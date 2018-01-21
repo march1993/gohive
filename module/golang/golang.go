@@ -174,7 +174,7 @@ func SetGolangInstallation(version string) api.Status {
 	if t := util.Shell("tar",
 		"xf", tmpPath,
 		"-C", outputPath,
-		"--strip-components", "!"); t != "" {
+		"--strip-components", "1"); t != "" {
 		return api.Status{
 			Status: api.STATUS_FAILURE,
 			Reason: t,

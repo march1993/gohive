@@ -11,7 +11,7 @@ const (
 	APP_DIR_PERM       = 0755
 	APP_DIR_O_USER     = 0 // APP_DIR Owner
 	APP_DIR_O_GROUP    = 0 // APP_DIR Group
-	GOLANG_DIR         = "/gohove.go"
+	GOLANG_DIR         = "/gohive.go"
 	GOLANG_DIR_PERM    = 0755
 	GOLANG_DIR_O_USER  = 0 // GOLANG_DIR Owner
 	GOLANG_DIR_O_GROUP = 0 // GOLANG_DIR Group
