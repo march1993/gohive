@@ -51,11 +51,11 @@ func (l *linux) Create(name string) error {
 			unixname)
 		stdout, err := cmd.CombinedOutput()
 
-		if err != nil {
-			panic(string(stdout) + err.Error())
-		}
-
 		os.MkdirAll(getDataDir(name), 0700)
+
+		if err != nil {
+			return errors.New(string(stdout))
+		}
 
 		return nil
 
