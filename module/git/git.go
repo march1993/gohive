@@ -133,15 +133,17 @@ func SetGitKeys(name string, keys []string) api.Status {
 func GetGitKeys(name string) api.Status {
 	home := linux.GetHomeDir(name)
 
-	if bytes, err := ioutil.ReadFile(home + SSH_KEY_FILE); err != nil {
+	if stdout, err := exec.Command("ssh-keygen",
+		"-lf",
+		home+SSH_KEY_FILE).CombinedOutput(); err != nil {
 		return api.Status{
 			Status: api.STATUS_FAILURE,
-			Reason: err.Error(),
+			Reason: string(stdout),
 		}
 	} else {
 		return api.Status{
 			Status: api.STATUS_SUCCESS,
-			Result: strings.Split(string(bytes), "\n"),
+			Result: string(stdout),
 		}
 	}
 }
