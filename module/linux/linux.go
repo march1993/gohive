@@ -6,7 +6,6 @@ import (
 	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
 	"os/exec"
-	"syscall"
 )
 
 type linux struct{}
@@ -24,7 +23,6 @@ func init() {
 		panic(string(stdout) + err.Error())
 	}
 
-	syscall.Umask(0077)
 }
 func (l *linux) Create(name string) error {
 
@@ -36,6 +34,7 @@ func (l *linux) Create(name string) error {
 			"-m",                   // create home
 			"-s", config.SSH_SHELL, // shell
 			"-g", Group, // group
+			"-K", "UMASK=0077"
 			unixname)
 		stdout, err := cmd.CombinedOutput()
 
