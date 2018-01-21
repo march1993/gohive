@@ -3,25 +3,25 @@ Gohive is a tool to help manage the micro-services driven by golang. Though nowa
 
 
 ## Depends
-1. OS support
+### 1. OS support
 
 Only Debian/stretch is supported so far. Directory `/gohive` would be used to store all the application and `/gohive.go` would be used to store all golang installtions.
 
-2. nginx
+### 2. nginx
 
 The symbol link `/etc/nginx/sites-enabled/default` would be cancelled.
 
-3. git
+### 3. git
 
-4. MariaDB
+### 4. MariaDB
 
 Currently only sock connection is supported. A database called `gohive` would be occupied.
 
-5. CertBot
+### 5. CertBot
 
-6. Golang
+### 6. Golang
 
-7. members
+### 7. members
 
 `members` is used to list users under a certain group.
 
@@ -53,6 +53,7 @@ sudo service gohive restart
 3. Golang support
 4. Nginx settings (including SSL) support
 5. Mysql support
+6. CPU/Mem/Disk Usage quota
 
 
 ## Customize
