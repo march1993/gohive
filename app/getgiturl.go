@@ -25,7 +25,7 @@ func getGitUrl(c echo.Context, request interface{}) error {
 	return c.JSON(http.StatusOK, api.Status{
 		Status: api.STATUS_SUCCESS,
 		Result: gitUrl,
-		Info:   "git push " + gitUrl + " remotes/origin/master",
+		Info:   "git push " + gitUrl + " <branch>",
 	})
 
 }

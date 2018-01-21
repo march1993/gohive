@@ -9,7 +9,13 @@ import (
 )
 
 func init() {
-	if err := os.MkdirAll(config.APP_DIR, 0755); err != nil {
+	if err := os.MkdirAll(config.APP_DIR, config.APP_DIR_PERM); err != nil {
+		panic(err.Error())
+	}
+	if err := os.Chmod(config.APP_DIR, config.APP_DIR_PERM); err != nil {
+		panic(err.Error())
+	}
+	if err := os.Chown(config.APP_DIR, config.APP_DIR_O_USER, config.APP_DIR_O_GROUP); err != nil {
 		panic(err.Error())
 	}
 }
@@ -29,5 +35,8 @@ func RegisterHandlers(e *echo.Group) {
 	e.POST("/getGitUrl", api.EnsureRequest(getGitUrl, &getGitUrlRequest{}))
 	e.POST("/setGitKeys", api.EnsureRequest(setGitKeys, &setGitKeysRequest{}))
 	e.POST("/getGitKeys", api.EnsureRequest(getGitKeys, &getGitKeysRequest{}))
+
+	e.POST("/getGolangList", api.EnsureRequest(getGolangList, &getGitKeysRequest{}))
+	e.POST("/setGolangInstallation", api.EnsureRequest(setGolangInstallation, &getGitKeysRequest{}))
 
 }

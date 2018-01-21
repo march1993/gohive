@@ -22,7 +22,7 @@ func (g *git) Create(name string) api.Status {
 	stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
-		"-c", "cd ~ && git init .",
+		"-c", "cd ~ && git init --bare repo.git",
 	).CombinedOutput()
 	if err != nil {
 		return api.Status{
@@ -49,7 +49,7 @@ func (g *git) Status(name string) api.Status {
 	stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
-		"-c", "cd ~ && git status",
+		"-c", "cd ~/repo.git && git status",
 	).CombinedOutput()
 	if err != nil {
 		return api.Status{
@@ -71,7 +71,7 @@ func (g *git) Repair(name string) api.Status {
 	if stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
-		"-c", "cd ~ && git init .",
+		"-c", "cd ~ && git init --bare repo.git",
 	).CombinedOutput(); err != nil {
 		errs = append(errs, string(stdout))
 	}
@@ -93,7 +93,7 @@ func (g *git) ListRemoved() []string {
 
 func GetGitUrl(name string) string {
 	unixname := linux.Prefix + name
-	return unixname + "@" + config.Get("server_name", "${server_name}") + ":~/.git"
+	return unixname + "@" + config.Get("server_name", "${server_name}") + ":~/repo.git"
 }
 
 const (

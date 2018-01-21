@@ -5,9 +5,18 @@ import (
 )
 
 // Configurations for compilation time
-const LISTEN_HOST_PORT = "127.0.0.1:1033"
-const APP_DIR = "/gohive"
-const SSH_SHELL = "/usr/bin/git-shell"
+const (
+	LISTEN_HOST_PORT   = "127.0.0.1:1033"
+	APP_DIR            = "/gohive"
+	APP_DIR_PERM       = 0755
+	APP_DIR_O_USER     = 0 // APP_DIR Owner
+	APP_DIR_O_GROUP    = 0 // APP_DIR Group
+	GOLANG_DIR         = "/gohove.go"
+	GOLANG_DIR_PERM    = 0755
+	GOLANG_DIR_O_USER  = 0 // GOLANG_DIR Owner
+	GOLANG_DIR_O_GROUP = 0 // GOLANG_DIR Group
+	SSH_SHELL          = "/usr/bin/git-shell"
+)
 
 /**
  *	Configurations stored in database

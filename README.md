@@ -5,7 +5,7 @@ Gohive is a tool to help manage the micro-services driven by golang. Though nowa
 ## Depends
 1. OS support
 
-Only Debian/stretch is supported so far. Directory `/gohive` would be used to store all the application.
+Only Debian/stretch is supported so far. Directory `/gohive` would be used to store all the application and `/gohive.go` would be used to store all golang installtions.
 
 2. nginx
 
