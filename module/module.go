@@ -25,11 +25,51 @@ func RegisterModule(name string, module Module) {
 
 }
 
-func GetAppStatus(app string) map[string]api.Status {
+func StatusApp(app string) map[string]api.Status {
 	ret := map[string]api.Status{}
 
 	for name, module := range Modules {
 		ret[name] = module.Status(app)
+	}
+
+	return ret
+}
+
+func CreateApp(app string) map[string]error {
+	ret := map[string]error{}
+
+	for name, module := range Modules {
+		ret[name] = module.Create(app)
+	}
+
+	return ret
+}
+
+func RemoveApp(app string) map[string]error {
+	ret := map[string]error{}
+
+	for name, module := range Modules {
+		ret[name] = module.Remove(app)
+	}
+
+	return ret
+}
+
+func RepairApp(app string) map[string]api.Status {
+	ret := map[string]api.Status{}
+
+	for name, module := range Modules {
+		ret[name] = module.Repair(app)
+	}
+
+	return ret
+}
+
+func ListRemovedApp() map[string]api.Status {
+	ret := map[string][]string
+
+	for name, module := range Modules {
+		ret[name] = module.ListRemoved()
 	}
 
 	return ret

@@ -18,6 +18,7 @@ func RegisterHandlers(e *echo.Group) {
 
 	e.Use(admin.AuthHandler)
 	e.POST("/getAppList", api.EnsureRequest(getAppList, &getAppListRequest{}))
+
 	e.POST("/getAppStatus", api.EnsureRequest(getAppStatus, &getAppStatusRequest{}))
 	e.POST("/createApp", api.EnsureRequest(createApp, &createAppRequest{}))
 	e.POST("/repairApp", api.EnsureRequest(repairApp, &repairAppRequest{}))
