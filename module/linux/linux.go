@@ -38,7 +38,7 @@ func getDataDir(name string) string {
 
 func (l *linux) Create(name string) api.Status {
 
-	if l.Status(name).Status == api.APP_NON_EXIST {
+	if l.Status(name).Reason == api.APP_NON_EXIST {
 		unixname := Prefix + name
 
 		cmd := exec.Command("useradd",
@@ -88,7 +88,7 @@ func (l *linux) Rename(oldName string, newName string) api.Status {
 }
 
 func (l *linux) Remove(name string) api.Status {
-	if ret := l.Status(name); ret.Status == api.APP_NON_EXIST {
+	if ret := l.Status(name); ret.Reason == api.APP_NON_EXIST {
 		return ret
 	} else {
 		unixname := Prefix + name
