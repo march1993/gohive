@@ -9,6 +9,7 @@ type Status struct {
 	Status string
 	Reason string
 	Result interface{}
+	Info   string
 }
 
 const (
