@@ -4,8 +4,10 @@ import (
 	"github.com/labstack/echo"
 	"github.com/march1993/gohive/api"
 	"github.com/march1993/gohive/config"
+	"github.com/march1993/gohive/module/linux"
 	"io/ioutil"
 	"net/http"
+	. "strings"
 )
 
 type getAppListRequest struct {
@@ -25,7 +27,11 @@ func getAppList(c echo.Context, request interface{}) error {
 
 	for _, file := range files {
 		if file.IsDir() {
-			result = append(result, file.Name())
+			name := file.Name()
+
+			if !HasSuffix(name, linux.Suffix) {
+				result = append(result, name)
+			}
 		}
 	}
 
