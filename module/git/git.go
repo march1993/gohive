@@ -108,12 +108,21 @@ const (
 )
 
 func SetGitKeys(name string, keys []string) api.Status {
+	unixname := linux.Prefix + name
 	home := linux.GetHomeDir(name)
 
 	errs := []string{}
 
 	if err := os.MkdirAll(home+SSH_DIR, 0700); err != nil {
 		errs = append(errs, err.Error())
+	}
+
+	if stdout, err := exec.Command("runuser",
+		unixname,
+		"-s", "/bin/bash",
+		"-c", "mkdir -p ~"+SSH_DIR,
+	).CombinedOutput(); err != nil {
+		errs = append(errs, string(stdout))
 	}
 
 	if err := ioutil.WriteFile(home+SSH_KEY_FILE, []byte(strings.Join(keys, "\n")), SSH_KEY_PERM); err != nil {
