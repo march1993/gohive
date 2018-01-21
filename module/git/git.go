@@ -124,7 +124,7 @@ func SetGitKeys(name string, keys []string) api.Status {
 	if stdout, err := exec.Command("chown",
 		unixname+":"+linux.Group,
 		"-R",
-		heom+SSH_DIR).CombinedOutput(); err != nil {
+		home+SSH_DIR).CombinedOutput(); err != nil {
 		errs = append(errs, string(stdout))
 	}
 
