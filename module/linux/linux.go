@@ -86,11 +86,15 @@ func (l *linux) Rename(oldName string, newName string) api.Status {
 		errs := []string{}
 		// 1. kill all process
 		if stdout, err := exec.Command("killall", "--user", Prefix+oldName).CombinedOutput(); err != nil {
-			errs = append(errs, string(stdout))
+			if string(stdout) != "" {
+				errs = append(errs, string(stdout))
+			}
 		}
 
 		if stdout, err := exec.Command("killall", "-s", "9", "--user", Prefix+oldName).CombinedOutput(); err != nil {
-			errs = append(errs, string(stdout))
+			if string(stdout) != "" {
+				errs = append(errs, string(stdout))
+			}
 		}
 
 		// 2. rename user
@@ -126,10 +130,14 @@ func (l *linux) Remove(name string) api.Status {
 		errs := []string{}
 		// 1. kill all process
 		if stdout, err := exec.Command("killall", "--user", Prefix+name).CombinedOutput(); err != nil {
-			errs = append(errs, string(stdout))
+			if string(stdout) != "" {
+				errs = append(errs, string(stdout))
+			}
 		}
 		if stdout, err := exec.Command("killall", "-s", "9", "--user", Prefix+name).CombinedOutput(); err != nil {
-			errs = append(errs, string(stdout))
+			if string(stdout) != "" {
+				errs = append(errs, string(stdout))
+			}
 		}
 
 		// 2. remove the user
