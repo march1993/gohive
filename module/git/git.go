@@ -117,16 +117,15 @@ func SetGitKeys(name string, keys []string) api.Status {
 		errs = append(errs, err.Error())
 	}
 
-	if stdout, err := exec.Command("runuser",
-		unixname,
-		"-s", "/bin/bash",
-		"-c", "cd ~ && mkdir -p ~"+SSH_DIR,
-	).CombinedOutput(); err != nil {
-		errs = append(errs, string(stdout))
-	}
-
 	if err := ioutil.WriteFile(home+SSH_KEY_FILE, []byte(strings.Join(keys, "\n")), SSH_KEY_PERM); err != nil {
 		errs = append(errs, err.Error())
+	}
+
+	if stdout, err := exec.Command("chown",
+		unixname+":"+linux.Group,
+		"-R",
+		heom+SSH_DIR).CombinedOutput(); err != nil {
+		errs = append(errs, string(stdout))
 	}
 
 	if len(errs) > 0 {
