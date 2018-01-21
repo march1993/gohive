@@ -23,6 +23,7 @@ func RegisterHandlers(e *echo.Group) {
 	e.POST("/createApp", api.EnsureRequest(createApp, &createAppRequest{}))
 	e.POST("/repairApp", api.EnsureRequest(repairApp, &repairAppRequest{}))
 	e.POST("/removeApp", api.EnsureRequest(removeApp, &removeAppRequest{}))
+	e.POST("/renameApp", api.EnsureRequest(renameApp, &renameAppRequest{}))
 	e.POST("/listRemovedApp", api.EnsureRequest(listRemovedApp, &listRemovedAppRequest{}))
 
 }

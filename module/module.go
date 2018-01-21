@@ -67,6 +67,16 @@ func RepairApp(app string) map[string]api.Status {
 	return ret
 }
 
+func RenameApp(oldName string, newName string) map[string]api.Status {
+	ret := map[string]api.Status{}
+
+	for _, item := range Modules {
+		ret[item.name] = item.module.Rename(oldName, newName)
+	}
+
+	return ret
+}
+
 func ListRemovedApp() map[string][]string {
 	ret := map[string][]string{}
 
