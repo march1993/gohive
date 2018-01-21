@@ -9,7 +9,7 @@ Only Debian/stretch is supported so far. Directory `/gohive` would be used to st
 
 2. nginx
 
-The symbol link of `/etc/nginx/sites-enabled/default` would be canceled.
+The symbol link `/etc/nginx/sites-enabled/default` would be cancelled.
 
 3. git
 

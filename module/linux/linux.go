@@ -56,7 +56,7 @@ func (l *linux) Create(name string) api.Status {
 	}
 }
 
-func (l *linux) Rename(oldName string, newName string) api.Status {
+func (l *linux) Rename(oldName, newName string) api.Status {
 	if l.Status(oldName).Status != api.STATUS_SUCCESS {
 		return api.Status{
 			Status: api.STATUS_FAILURE,

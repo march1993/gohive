@@ -1,0 +1,8 @@
+# default bash
+. /etc/skel/.bashrc
+
+if [ -f ~/.local.bashrc ];
+    . ~/.local.bashrc
+fi
+
+

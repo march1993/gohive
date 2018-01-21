@@ -20,6 +20,11 @@ type moduleItem struct {
 }
 
 var Modules = []moduleItem{}
+var Environ = []func(name string) map[string]string{}
+
+func RegisterEnviron(handler func(name string) map[string]string) {
+	Environ = append(Environ, handler)
+}
 
 func RegisterModule(name string, module Module) {
 
