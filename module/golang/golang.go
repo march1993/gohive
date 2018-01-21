@@ -72,6 +72,7 @@ func (g *golang) Status(name string) api.Status {
 	unixname := config.APP_PREFIX + name
 	stdout, err := exec.Command("runuser",
 		unixname,
+		"-l",
 		"-c", "go version",
 	).CombinedOutput()
 	if err != nil {
