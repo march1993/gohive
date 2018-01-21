@@ -7,12 +7,12 @@ import (
 	"net/http"
 )
 
-type repairAppRequest struct {
+type removeAppRequest struct {
 	App string
 }
 
-func repairApp(c echo.Context, request interface{}) error {
-	req := *request.(*repairAppRequest)
+func removeApp(c echo.Context, request interface{}) error {
+	req := *request.(*removeAppRequest)
 
 	if checkName(req.App) == false {
 		return c.JSON(http.StatusOK, api.Status{
@@ -23,7 +23,7 @@ func repairApp(c echo.Context, request interface{}) error {
 
 	return c.JSON(http.StatusOK, api.Status{
 		Status: api.STATUS_SUCCESS,
-		Result: module.RepairApp(req.App),
+		Result: module.RemoveApp(req.App),
 	})
 
 }

@@ -21,17 +21,9 @@ func createApp(c echo.Context, request interface{}) error {
 		})
 	}
 
-	for _, module := range module.ModuleList {
-		if err := module.Create(req.App); err != nil {
-			return c.JSON(http.StatusOK, api.Status{
-				Status: api.STATUS_FAILURE,
-				Reason: err.Error(),
-			})
-		}
-	}
-
 	return c.JSON(http.StatusOK, api.Status{
 		Status: api.STATUS_SUCCESS,
+		Result: module.CreateApp(req.App),
 	})
 
 }

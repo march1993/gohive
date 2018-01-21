@@ -7,16 +7,16 @@ import (
 	"net/http"
 )
 
-type getAppStatusRequest struct {
+type listRemovedAppRequest struct {
 	App string
 }
 
-func getAppStatus(c echo.Context, request interface{}) error {
-	req := *request.(*getAppStatusRequest)
+func listRemovedApp(c echo.Context, request interface{}) error {
+	// req := *request.(*listRemovedAppRequest)
 
 	return c.JSON(http.StatusOK, api.Status{
 		Status: api.STATUS_SUCCESS,
-		Result: module.GetAppStatus(req.App),
+		Result: module.ListRemovedApp(),
 	})
 
 }

@@ -1,7 +1,6 @@
 package linux
 
 import (
-	"errors"
 	"github.com/march1993/gohive/api"
 	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
@@ -37,7 +36,7 @@ func getDataDir(name string) string {
 	return config.APP_DIR + "/" + Prefix + name + Suffix
 }
 
-func (l *linux) Create(name string) error {
+func (l *linux) Create(name string) api.Status {
 
 	if l.Status(name).Status == api.APP_NON_EXIST {
 		unixname := Prefix + name
@@ -54,31 +53,43 @@ func (l *linux) Create(name string) error {
 		os.MkdirAll(getDataDir(name), 0700)
 
 		if err != nil {
-			return errors.New(string(stdout))
+			return api.Status{
+				Status: api.STATUS_FAILURE,
+				Reason: string(stdout),
+			}
 		}
 
-		return nil
+		return api.Status{Status: api.STATUS_SUCCESS}
 
 	} else {
-		return errors.New(api.APP_ALREADY_EXISTING)
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: api.APP_ALREADY_EXISTING,
+		}
 	}
 }
 
-func (l *linux) Rename(oldName string, newName string) error {
+func (l *linux) Rename(oldName string, newName string) api.Status {
 	if l.Status(oldName).Status != api.STATUS_SUCCESS {
-		return errors.New(api.REASON_CONDITION_UNMET)
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: api.REASON_CONDITION_UNMET,
+		}
 	} else {
 		// TODO:
 		// 1. kill all process
 		// 2. rename user
 		// 3. rename folders
-		return nil
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: api.REASON_UNKNOWN,
+		}
 	}
 }
 
-func (l *linux) Remove(name string) error {
-	if l.Status(name).Status == api.APP_NON_EXIST {
-		return errors.New(api.APP_NON_EXIST)
+func (l *linux) Remove(name string) api.Status {
+	if ret := l.Status(name); ret.Status == api.APP_NON_EXIST {
+		return ret
 	} else {
 		unixname := Prefix + name
 		cmd := exec.Command("userdel", unixname)
@@ -87,18 +98,82 @@ func (l *linux) Remove(name string) error {
 		os.RemoveAll(getHomeDir(name))
 		os.RemoveAll(getDataDir(name))
 
-		return nil
+		return api.Status{Status: api.STATUS_SUCCESS}
 	}
 }
 
 func (l *linux) Status(name string) api.Status {
-	// TODO
-	return api.Status{
-		Status: api.APP_NON_EXIST,
+
+	unixname := Prefix + name
+
+	parital := false
+	broken := false
+
+	// check user
+	_, err := user.Lookup(unixname)
+	if err != nil {
+		broken = true
+	} else {
+		parital = true
 	}
+
+	// check group
+	cmd := exec.Command("id", "-gn", unixname)
+	stdout, err := cmd.CombinedOutput()
+	if err != nil || strings.Trim(string(stdout), "\n") != Group {
+		broken = true
+	} else {
+		parital = true
+	}
+
+	// check files
+	cmd = exec.Command("stat", "-c", "%U", getHomeDir(name))
+	if err != nil || strings.Trim(string(stdout), "\n") != unixname {
+		broken = true
+	} else {
+		parital = true
+	}
+
+	cmd = exec.Command("stat", "-c", "%G", getHomeDir(name))
+	if err != nil || strings.Trim(string(stdout), "\n") != Group {
+		broken = true
+	} else {
+		parital = true
+	}
+
+	cmd = exec.Command("stat", "-c", "%U", getDataDir(name))
+	if err != nil || strings.Trim(string(stdout), "\n") != "root" {
+		broken = true
+	} else {
+		parital = true
+	}
+
+	cmd = exec.Command("stat", "-c", "%G", getDataDir(name))
+	if err != nil || strings.Trim(string(stdout), "\n") != "root" {
+		broken = true
+	} else {
+		parital = true
+	}
+
+	if broken {
+		if parital {
+			return api.Status{
+				Status: api.STATUS_FAILURE,
+				Reason: api.APP_BROKEN,
+			}
+		} else {
+			return api.Status{
+				Status: api.STATUS_FAILURE,
+				Reason: api.APP_NON_EXIST,
+			}
+		}
+	} else {
+		return api.Status{Status: api.STATUS_SUCCESS}
+	}
+
 }
 
-func (l *linux) Repair(name string) error {
+func (l *linux) Repair(name string) api.Status {
 
 	// create user
 	_, err := user.Lookup(name)
@@ -123,12 +198,21 @@ func (l *linux) Repair(name string) error {
 		"-R",
 		getDataDir(name))
 	stdout, err = cmd.CombinedOutput()
+	if err != nil {
+		panic(string(stdout) + err.Error())
+	}
+
+	// fix group
+	cmd = exec.Command("usermod",
+		"-g", Group,
+		unixname)
+	stdout, err = cmd.CombinedOutput()
 
 	if err != nil {
 		panic(string(stdout) + err.Error())
 	}
 
-	return nil
+	return api.Status{Status: api.STATUS_SUCCESS}
 }
 
 func (l *linux) ListRemoved() []string {

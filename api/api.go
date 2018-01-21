@@ -29,6 +29,7 @@ const (
 	APP_NAME_INVALID     = "APP_NAME_INVALID"
 	APP_NON_EXIST        = "APP_NON_EXIST"
 	APP_ALREADY_EXISTING = "APP_ALREADY_EXISTING"
+	APP_BROKEN           = "APP_BROKEN"
 )
 
 type Credential struct {

@@ -5,51 +5,53 @@ import (
 )
 
 type Module interface {
-	Create(name string) error // create application
-	Rename(oldName string, newName string) error
-	Remove(name string) error      // remove application
+	Create(name string) api.Status // create application
+	Rename(oldName string, newName string) api.Status
+	Remove(name string) api.Status // remove application
 	Status(name string) api.Status // show status
+	Repair(name string) api.Status // Repair an application when it's broken or copied to the hive directory
 
-	Repair(name string) error // Repair an application when it's broken or copied to the hive directory
-	ListRemoved() []string    // List application names whose have been removed
+	ListRemoved() []string // List application names whose have been removed
 }
 
-var Modules = map[string]Module{}
+type moduleItem struct {
+	name   string
+	module Module
+}
 
-var ModuleList = []Module{}
+var Modules = []moduleItem{}
 
 func RegisterModule(name string, module Module) {
 
-	Modules[name] = module
-	ModuleList = append(ModuleList, module)
+	Modules = append(Modules, moduleItem{name: name, module: module})
 
 }
 
 func StatusApp(app string) map[string]api.Status {
 	ret := map[string]api.Status{}
 
-	for name, module := range Modules {
-		ret[name] = module.Status(app)
+	for _, item := range Modules {
+		ret[item.name] = item.module.Status(app)
 	}
 
 	return ret
 }
 
-func CreateApp(app string) map[string]error {
-	ret := map[string]error{}
+func CreateApp(app string) map[string]api.Status {
+	ret := map[string]api.Status{}
 
-	for name, module := range Modules {
-		ret[name] = module.Create(app)
+	for _, item := range Modules {
+		ret[item.name] = item.module.Create(app)
 	}
 
 	return ret
 }
 
-func RemoveApp(app string) map[string]error {
-	ret := map[string]error{}
+func RemoveApp(app string) map[string]api.Status {
+	ret := map[string]api.Status{}
 
-	for name, module := range Modules {
-		ret[name] = module.Remove(app)
+	for _, item := range Modules {
+		ret[item.name] = item.module.Remove(app)
 	}
 
 	return ret
@@ -58,18 +60,18 @@ func RemoveApp(app string) map[string]error {
 func RepairApp(app string) map[string]api.Status {
 	ret := map[string]api.Status{}
 
-	for name, module := range Modules {
-		ret[name] = module.Repair(app)
+	for _, item := range Modules {
+		ret[item.name] = item.module.Repair(app)
 	}
 
 	return ret
 }
 
-func ListRemovedApp() map[string]api.Status {
-	ret := map[string][]string
+func ListRemovedApp() map[string][]string {
+	ret := map[string][]string{}
 
-	for name, module := range Modules {
-		ret[name] = module.ListRemoved()
+	for _, item := range Modules {
+		ret[item.name] = item.module.ListRemoved()
 	}
 
 	return ret
