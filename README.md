@@ -20,12 +20,11 @@ Currently only sock connection is supported. A database called `gohive` would be
 ### 5. CertBot
 
 ### 6. Golang
+`GOPATH` should be correctly configured. `1.9.2` is tested and recommended.
 
 ### 7. members
 
 `members` is used to list users under a certain group.
-
-`GOPATH` should be correctly configured. `1.9.4` is tested and recommended.
 
 ## Install
 I recommend to install gohive on a fresh server.
