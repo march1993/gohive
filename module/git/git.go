@@ -4,6 +4,7 @@ import (
 	"github.com/march1993/gohive/api"
 	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
+	_ "github.com/march1993/gohive/module/linux"
 	"io/ioutil"
 	"os"
 	"os/exec"

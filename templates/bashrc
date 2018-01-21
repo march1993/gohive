@@ -1,7 +1,7 @@
 # default bash
 . /etc/skel/.bashrc
 
-if [ -f ~/workspace/.gohive.bashrc ];
+if [ -f ~/workspace/.gohive.bashrc ]; then
     . ~/workspace/.gohive.bashrc
 fi
 
