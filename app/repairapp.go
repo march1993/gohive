@@ -12,7 +12,7 @@ type repairAppRequest struct {
 }
 
 func repairApp(c echo.Context, request interface{}) error {
-	req := *request.(*createAppRequest)
+	req := *request.(*repairAppRequest)
 
 	if checkName(req.App) == false {
 		return c.JSON(http.StatusOK, api.Status{
