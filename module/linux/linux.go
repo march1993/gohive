@@ -1,6 +1,7 @@
 package linux
 
 import (
+	"errors"
 	"github.com/march1993/gohive/api"
 	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
@@ -76,31 +77,38 @@ func (l *linux) Rename(oldName string, newName string) api.Status {
 			Reason: api.REASON_CONDITION_UNMET,
 		}
 	} else {
-		// TODO:
+
+		errs := []string{}
 		// 1. kill all process
-		cmd := exec.Command("killall", "--user", Prefix+oldName)
-		cmd.CombinedOutput()
+		if stdout, err := exec.Command("killall", "--user", Prefix+oldName).CombinedOutput(); err != nil {
+			errs = append(errs, string(stdout))
+		}
+
+		if stdout, err := exec.Command("killall", "-s", "9", "--user", Prefix+oldName).CombinedOutput(); err != nil {
+			errs = append(errs, string(stdout))
+		}
 
 		// 2. rename user
-		// 3. rename folders
-		cmd = exec.Command("usermod",
+		if stdout, err := exec.Command("usermod",
 			"-l", Prefix+newName,
 			"-m", "-d", getHomeDir(newName),
-			Prefix+oldName)
-		stdout, err := cmd.CombinedOutput()
-		if err != nil {
-			panic(string(stdout) + err.Error())
+			Prefix+oldName).CombinedOutput(); err != nil {
+			errs = append(errs, string(stdout))
 		}
 
-		cmd = exec.Command("mv",
-			getDataDir(oldName),
-			getDataDir(newName))
-		stdout, err = cmd.CombinedOutput()
-		if err != nil {
-			panic(string(stdout) + err.Error())
+		// 3. rename folders
+		if err := os.Rename(getDataDir(oldName), getDataDir(newName)); err != nil {
+			errs = append(errs, err.Error())
 		}
 
-		return api.Status{Status: api.STATUS_SUCCESS}
+		if len(errs) > 0 {
+			return api.Status{
+				Status: api.STATUS_FAILURE,
+				Reason: strings.Join(errs, "\n"),
+			}
+		} else {
+			return api.Status{Status: api.STATUS_SUCCESS}
+		}
 	}
 }
 
@@ -109,13 +117,49 @@ func (l *linux) Remove(name string) api.Status {
 		return ret
 	} else {
 		unixname := Prefix + name
-		cmd := exec.Command("userdel", unixname)
-		cmd.CombinedOutput()
 
-		os.RemoveAll(getHomeDir(name))
-		os.RemoveAll(getDataDir(name))
+		errs := []string{}
+		// 1. kill all process
+		if stdout, err := exec.Command("killall", "--user", Prefix+name).CombinedOutput(); err != nil {
+			errs = append(errs, string(stdout))
+		}
+		if stdout, err := exec.Command("killall", "-s", "9", "--user", Prefix+name).CombinedOutput(); err != nil {
+			errs = append(errs, string(stdout))
+		}
 
-		return api.Status{Status: api.STATUS_SUCCESS}
+		// 2. remove the user
+		if stdout, err := exec.Command("userdel", unixname).CombinedOutput(); err != nil {
+			errs = append(errs, string(stdout))
+		}
+
+		// 3. remove the directories
+		if err := os.RemoveAll(getHomeDir(name)); err != nil {
+			errs = append(errs, err.Error())
+		}
+		if err := os.RemoveAll(getDataDir(name)); err != nil {
+			errs = append(errs, err.Error())
+		}
+
+		if len(errs) > 0 {
+			return api.Status{
+				Status: api.STATUS_FAILURE,
+				Reason: strings.Join(errs, "\n"),
+			}
+		} else {
+			return api.Status{Status: api.STATUS_SUCCESS}
+		}
+	}
+}
+
+func testCmdHelper(desired string, name string, arg ...string) error {
+	cmd := exec.Command(name, arg...)
+	stdout, err := cmd.CombinedOutput()
+	trimmed := strings.Trim(string(stdout), "\n")
+	if err != nil || trimmed != desired {
+		return errors.New("[" + name + " " + strings.Join(arg, " ") + "]\n" +
+			"Unexpected value: " + trimmed + " (" + desired + " desired)")
+	} else {
+		return nil
 	}
 }
 
@@ -124,59 +168,48 @@ func (l *linux) Status(name string) api.Status {
 	unixname := Prefix + name
 
 	parital := false
-	broken := false
+	errs := []string{}
 
 	// check user
-	_, err := user.Lookup(unixname)
-	if err != nil {
-		broken = true
+	if _, err := user.Lookup(unixname); err != nil {
+		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
 	// check group
-	cmd := exec.Command("id", "-gn", unixname)
-	stdout, err := cmd.CombinedOutput()
-	if err != nil || strings.Trim(string(stdout), "\n") != Group {
-		broken = true
+	if err := testCmdHelper(Group, "id", "-gn", unixname); err != nil {
+		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
 	// check files
-	cmd = exec.Command("stat", "-c", "%U", getHomeDir(name))
-	stdout, err = cmd.CombinedOutput()
-	if err != nil || strings.Trim(string(stdout), "\n") != unixname {
-		broken = true
+	if err := testCmdHelper(unixname, "stat", "-c", "%U", getHomeDir(name)); err != nil {
+		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
-	cmd = exec.Command("stat", "-c", "%G", getHomeDir(name))
-	stdout, err = cmd.CombinedOutput()
-	if err != nil || strings.Trim(string(stdout), "\n") != Group {
-		broken = true
+	if err := testCmdHelper(Group, "stat", "-c", "%G", getHomeDir(name)); err != nil {
+		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
-	cmd = exec.Command("stat", "-c", "%U", getDataDir(name))
-	stdout, err = cmd.CombinedOutput()
-	if err != nil || strings.Trim(string(stdout), "\n") != "root" {
-		broken = true
+	if err := testCmdHelper("root", "stat", "-c", "%U", getDataDir(name)); err != nil {
+		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
-	cmd = exec.Command("stat", "-c", "%G", getDataDir(name))
-	stdout, err = cmd.CombinedOutput()
-	if err != nil || strings.Trim(string(stdout), "\n") != "root" {
-		broken = true
+	if err := testCmdHelper("root", "stat", "-c", "%G", getDataDir(name)); err != nil {
+		errs = append(errs, err.Error())
 	} else {
 		parital = true
 	}
 
-	if broken {
+	if len(errs) > 0 {
 		if parital {
 			return api.Status{
 				Status: api.STATUS_FAILURE,
@@ -202,38 +235,42 @@ func (l *linux) Repair(name string) api.Status {
 		l.Create(name)
 	}
 
+	errs := []string{}
 	// fix files owners
 	unixname := Prefix + name
-	cmd := exec.Command("chown",
+	stdout, err := exec.Command("chown",
 		unixname+":"+Group,
 		"-R",
-		getHomeDir(name))
-	stdout, err := cmd.CombinedOutput()
-
+		getHomeDir(name)).CombinedOutput()
 	if err != nil {
-		panic(string(stdout) + err.Error())
+		errs = append(errs, string(stdout))
 	}
 
-	cmd = exec.Command("chown",
+	stdout, err = exec.Command("chown",
 		"root:root",
 		"-R",
-		getDataDir(name))
-	stdout, err = cmd.CombinedOutput()
+		getDataDir(name)).CombinedOutput()
 	if err != nil {
-		panic(string(stdout) + err.Error())
+		errs = append(errs, string(stdout))
 	}
 
 	// fix group
-	cmd = exec.Command("usermod",
+	stdout, err = exec.Command("usermod",
 		"-g", Group,
-		unixname)
-	stdout, err = cmd.CombinedOutput()
-
+		unixname).CombinedOutput()
 	if err != nil {
-		panic(string(stdout) + err.Error())
+		errs = append(errs, string(stdout))
 	}
 
-	return api.Status{Status: api.STATUS_SUCCESS}
+	if len(errs) > 0 {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: strings.Join(errs, "\n"),
+		}
+	} else {
+		return api.Status{Status: api.STATUS_SUCCESS}
+
+	}
 }
 
 func (l *linux) ListRemoved() []string {
