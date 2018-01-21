@@ -7,6 +7,7 @@ import (
 	"github.com/march1993/gohive/module"
 	"os"
 	"os/exec"
+	"os/user"
 	"strings"
 )
 
@@ -64,7 +65,15 @@ func (l *linux) Create(name string) error {
 }
 
 func (l *linux) Rename(oldName string, newName string) error {
-	return nil
+	if l.Status(oldName).Status != api.STATUS_SUCCESS {
+		return errors.New(api.REASON_CONDITION_UNMET)
+	} else {
+		// TODO:
+		// 1. kill all process
+		// 2. rename user
+		// 3. rename folders
+		return nil
+	}
 }
 
 func (l *linux) Remove(name string) error {
@@ -90,7 +99,35 @@ func (l *linux) Status(name string) api.Status {
 }
 
 func (l *linux) Repair(name string) error {
-	// TODO
+
+	// create user
+	_, err := user.Lookup(name)
+	if err != nil {
+		l.Create(name)
+	}
+
+	// fix files owners
+	unixname := Prefix + name
+	cmd := exec.Command("chown",
+		unixname+":"+Group,
+		"-R",
+		getHomeDir(name))
+	stdout, err := cmd.CombinedOutput()
+
+	if err != nil {
+		panic(string(stdout) + err.Error())
+	}
+
+	cmd = exec.Command("chown",
+		"root:root",
+		"-R",
+		getDataDir(name))
+	stdout, err = cmd.CombinedOutput()
+
+	if err != nil {
+		panic(string(stdout) + err.Error())
+	}
+
 	return nil
 }
 
