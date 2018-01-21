@@ -120,7 +120,7 @@ func SetGitKeys(name string, keys []string) api.Status {
 	if stdout, err := exec.Command("runuser",
 		unixname,
 		"-s", "/bin/bash",
-		"-c", "mkdir -p ~"+SSH_DIR,
+		"-c", "cd ~ && mkdir -p ~"+SSH_DIR,
 	).CombinedOutput(); err != nil {
 		errs = append(errs, string(stdout))
 	}
