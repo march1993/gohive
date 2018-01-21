@@ -31,6 +31,6 @@ func setGolangVersion(c echo.Context, request interface{}) error {
 
 	golang.SetGolangVersion(req.App, req.Version)
 
-	return repairApp(c, repairAppRequest{App: req.App})
+	return repairApp(c, &repairAppRequest{App: req.App})
 
 }
