@@ -81,15 +81,19 @@ func (g *golang) Status(name string) api.Status {
 			Reason: string(stdout),
 		}
 	} else {
-		if strings.Contains(string(stdout), version) {
-			return api.Status{Status: api.STATUS_SUCCESS}
+		output := string(stdout)
+		if strings.Contains(output, version) {
+			return api.Status{
+				Status: api.STATUS_SUCCESS,
+				Result: output,
+			}
 		} else {
 			return api.Status{
 				Status: api.STATUS_FAILURE,
 				Reason: api.GOLANG_VERSION_MISMATCHING,
 				Addition: map[string]string{
 					"Desired":   version,
-					"Presented": string(stdout),
+					"Presented": output,
 				},
 			}
 		}
