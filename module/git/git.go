@@ -57,7 +57,10 @@ func (g *git) Status(name string) api.Status {
 			Reason: string(stdout),
 		}
 	} else {
-		return api.Status{Status: api.STATUS_SUCCESS}
+		return api.Status{
+			Status: api.STATUS_SUCCESS,
+			Result: string(stdout),
+		}
 	}
 }
 
