@@ -263,6 +263,13 @@ func (l *linux) Repair(name string) api.Status {
 	}
 
 	errs := []string{}
+	// ensure directories exist
+	if err := os.MkdirAll(getHomeDir(name), 0700); err != nil {
+		errs = append(errs, err.Error())
+	}
+	if err := os.MkdirAll(getDataDir(name), 0700); err != nil {
+		errs = append(errs, err.Error())
+	}
 	// fix files owners
 	unixname := Prefix + name
 	stdout, err := exec.Command("chown",
