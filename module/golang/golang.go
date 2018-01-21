@@ -150,6 +150,13 @@ func SetGolangInstallation(version string) api.Status {
 		}
 	}
 
+	if resp.StatusCode != http.StatusOK {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: api.REASON_DOWNLOAD_FAILED,
+		}
+	}
+
 	defer resp.Body.Close()
 
 	_, err = io.Copy(tmp, resp.Body)
