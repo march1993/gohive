@@ -51,7 +51,9 @@ func (l *linux) Remove(name string) error {
 }
 
 func (l *linux) Status(name string) api.Status {
-	return api.Status{}
+	return api.Status{
+		Status: api.APP_NON_EXIST,
+	}
 }
 
 func (l *linux) Repair(name string) error {
