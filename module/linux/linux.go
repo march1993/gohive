@@ -34,7 +34,7 @@ func (l *linux) Create(name string) error {
 			"-m",                   // create home
 			"-s", config.SSH_SHELL, // shell
 			"-g", Group, // group
-			"-K", "UMASK=0077"
+			"-K", "UMASK=0077",
 			unixname)
 		stdout, err := cmd.CombinedOutput()
 
