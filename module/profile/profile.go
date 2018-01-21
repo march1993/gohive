@@ -56,8 +56,27 @@ func (p *profile) Remove(name string) api.Status {
 }
 
 func (p *profile) Status(name string) api.Status {
-	// TODO
-	return api.Status{Status: api.STATUS_SUCCESS}
+	hash := config.AppConfigGet(name, "profile", "hash", "")
+	bashrcGenerated := config.GetHomeDir(name) + "/" + bashrcFilename
+
+	bytes, err := ioutil.ReadFile(bashrcGenerated)
+
+	if err != nil {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: err.Error(),
+		}
+	}
+
+	if hash != util.Hash(string(bytes)) {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: api.PROFILE_BASHRC_EXPIRED,
+		}
+	} else {
+		return api.Status{Status: api.STATUS_SUCCESS}
+	}
+
 }
 
 func (p *profile) Repair(name string) api.Status {
