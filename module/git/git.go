@@ -73,14 +73,6 @@ func (g *git) Repair(name string) api.Status {
 		errs = append(errs, string(stdout))
 	}
 
-	if stdout, err := exec.Command("runuser",
-		unixname,
-		"-s", "/bin/bash",
-		"-c", "cd ~ && git checkout .",
-	).CombinedOutput(); err != nil {
-		errs = append(errs, string(stdout))
-	}
-
 	if len(errs) > 0 {
 		return api.Status{
 			Status: api.STATUS_FAILURE,

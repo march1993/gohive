@@ -28,7 +28,7 @@ Currently only sock connection is supported. A database called `gohive` would be
 `GOPATH` should be correctly configured. `1.9.4` is tested and recommended.
 
 ## Install
-
+I recommend to install gohive on a fresh server.
 ```shell
 go get github.com/march1993/gohive
 cd $GOPATH/src/github.com/march1993/gohive
