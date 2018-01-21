@@ -128,6 +128,7 @@ func (l *linux) Status(name string) api.Status {
 
 	// check files
 	cmd = exec.Command("stat", "-c", "%U", getHomeDir(name))
+	stdout, err = cmd.CombinedOutput()
 	if err != nil || strings.Trim(string(stdout), "\n") != unixname {
 		broken = true
 	} else {
@@ -135,6 +136,7 @@ func (l *linux) Status(name string) api.Status {
 	}
 
 	cmd = exec.Command("stat", "-c", "%G", getHomeDir(name))
+	stdout, err = cmd.CombinedOutput()
 	if err != nil || strings.Trim(string(stdout), "\n") != Group {
 		broken = true
 	} else {
@@ -142,6 +144,7 @@ func (l *linux) Status(name string) api.Status {
 	}
 
 	cmd = exec.Command("stat", "-c", "%U", getDataDir(name))
+	stdout, err = cmd.CombinedOutput()
 	if err != nil || strings.Trim(string(stdout), "\n") != "root" {
 		broken = true
 	} else {
@@ -149,6 +152,7 @@ func (l *linux) Status(name string) api.Status {
 	}
 
 	cmd = exec.Command("stat", "-c", "%G", getDataDir(name))
+	stdout, err = cmd.CombinedOutput()
 	if err != nil || strings.Trim(string(stdout), "\n") != "root" {
 		broken = true
 	} else {
