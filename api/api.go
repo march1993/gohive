@@ -28,6 +28,9 @@ const (
 	// authentication
 	AUTH_FAILURE = "AUTH_FAILURE"
 
+	// admin
+	SERVER_NAME_INVALID = "SERVER_NAME_INVALID"
+
 	// applications
 	APP_NAME_INVALID     = "APP_NAME_INVALID"
 	APP_NON_EXIST        = "APP_NON_EXIST"

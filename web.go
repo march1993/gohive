@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/march1993/gohive/admin"
 	"github.com/march1993/gohive/app"
 	"github.com/march1993/gohive/config"
 	"net/http"
@@ -24,6 +25,7 @@ func Web() {
 	})
 
 	app.RegisterHandlers(e.Group("/app"))
+	admin.RegisterHandlers(e.Group("/admin"))
 
 	e.Logger.Fatal(e.Start(config.LISTEN_HOST_PORT))
 }
