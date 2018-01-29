@@ -5,6 +5,7 @@ import (
 	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
 	_ "github.com/march1993/gohive/module/linux"
+	"github.com/march1993/gohive/module/systemd"
 	"github.com/march1993/gohive/util"
 	"io/ioutil"
 	"os"
@@ -47,6 +48,7 @@ func (g *git) Create(name string) api.Status {
 		template := string(bytes)
 		template = strings.Replace(template, "{{GOLANG_EXECUTABLE}}", config.GOLANG_EXECUTABLE, -1)
 		template = strings.Replace(template, "{{UNIXNAME}}", unixname, -1)
+		template = strings.Replace(template, "{{GOHIVE}}", systemd.ExecStart, -1)
 		config.AppConfigSet(name, "git", "post-update-hash", util.Hash(template))
 
 		err = ioutil.WriteFile(generated, []byte(template), 0755)

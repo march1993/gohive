@@ -9,7 +9,7 @@ WorkingDirectory={{WorkingDirectory}}
 User={{User}}
 Group={{Group}}
 Restart=on-failure
-RestartSec=60s
+RestartSec={{RestartSec}}
 
 [Install]
 WantedBy=multi-user.target

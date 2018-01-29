@@ -24,10 +24,11 @@ const (
 
 // Linux setting
 const (
-	APP_PREFIX             = "gohive_app_"
-	APP_GROUP              = "gohive_app"
-	APP_DATA_SUFFIX        = ".data"
-	APP_PORT_BEGIN  uint16 = 2000
+	APP_PREFIX                  = "gohive_app_"
+	APP_GROUP                   = "gohive_app"
+	APP_DATA_SUFFIX             = ".data"
+	APP_PORT_BEGIN       uint16 = 2000
+	APP_RESTART_INTERVAL        = "60s" // restart interval when the service fails
 )
 
 // Golang setting

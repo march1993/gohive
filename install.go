@@ -3,10 +3,13 @@ package main
 import (
 	"fmt"
 	"github.com/march1993/gohive/admin"
+	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module/nginx"
 	"github.com/march1993/gohive/module/systemd"
 	"github.com/march1993/gohive/util"
+	"io/ioutil"
 	"os/user"
+	"strings"
 )
 
 func Install() {
@@ -14,6 +17,7 @@ func Install() {
 	systemd.RegisterService()
 	nginx.RegisterNginx()
 	updateAdminToken()
+	updateSudoer()
 }
 
 func testRoot() {
@@ -35,5 +39,27 @@ func updateAdminToken() {
 		fmt.Println("Please use this token to login web panel.")
 	} else {
 		fmt.Println("Already set. Skipping.")
+	}
+}
+
+const (
+	SUDOER_TEMPLATE  = "./templates/sudoer"
+	SUDOER_GENERATED = "/etc/sudoers.d/gohive"
+)
+
+func updateSudoer() {
+	bytes, err := ioutil.ReadFile(SUDOER_TEMPLATE)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	content := string(bytes)
+	content = strings.Replace(content, "{{APP_GROUP}}", config.APP_GROUP, -1)
+	content = strings.Replace(content, "{{GOHIVE}}", systemd.ExecStart, -1)
+
+	err = ioutil.WriteFile(SUDOER_GENERATED, []byte(content), 0440)
+
+	if err != nil {
+		panic(err.Error())
 	}
 }

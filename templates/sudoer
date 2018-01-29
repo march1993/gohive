@@ -1,0 +1,1 @@
+%{{APP_GROUP}}	ALL=NOPASSWD: {{GOHIVE}} -restart-service

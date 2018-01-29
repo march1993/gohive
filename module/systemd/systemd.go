@@ -39,6 +39,7 @@ func (s *systemd) Create(name string) api.Status {
 	generated = strings.Replace(generated, "{{WorkingDirectory}}", config.GetHomeDir(name), -1)
 	generated = strings.Replace(generated, "{{User}}", unixname, -1)
 	generated = strings.Replace(generated, "{{Group}}", config.APP_GROUP, -1)
+	generated = strings.Replace(generated, "{{RestartSec}}", config.APP_RESTART_INTERVAL, -1)
 
 	hash := util.Hash(generated)
 	config.AppConfigSet(name, "systemd", "hash", hash)
