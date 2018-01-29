@@ -26,7 +26,11 @@ Currently only sock connection is supported. A database called `gohive` would be
 
 `members` is used to list users under a certain group.
 
+### 8. sudo
+`sudo` is used to trigger restarting the corresponding service after the git repository is updated.
+
 ## Install
+### 1. Deploy gohive
 I recommend to install gohive on a fresh server.
 ```shell
 go get github.com/march1993/gohive
@@ -35,6 +39,12 @@ go build
 ./gohive -install
 ```
 Use the generated token to login the web panel.
+
+### 2. Set up server name
+Navigate to `http://$SERVER_IP/` and change `server name`.
+
+### 3. Set up DNS record
+Add a wild-cards record. For example, `gohive.example.com` is your server, then add a CNAME record of `*.gohive.example.com` to `gohive.example.com`. Thus app `some_app` can be accessed through `some_app.gohive.example.com`.
 
 
 ## Upgrade
@@ -47,12 +57,10 @@ sudo service gohive restart
 ```
 
 ## TODO List
-1. Web UI
-2. App management (git repository, pubkey importation, ulimit and etc.)
-3. Golang support
-4. Nginx settings (including SSL) support
-5. Mysql support
-6. CPU/Mem/Disk Usage quota
+1. Better Web UI
+2. Nginx SSL support
+3. Mysql support
+4. CPU/Mem/Disk Usage quota
 
 
 ## Customize

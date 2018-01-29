@@ -46,6 +46,7 @@ func (g *git) Create(name string) api.Status {
 	} else {
 		template := string(bytes)
 		template = strings.Replace(template, "{{GOLANG_EXECUTABLE}}", config.GOLANG_EXECUTABLE, -1)
+		template = strings.Replace(template, "{{UNIXNAME}}", unixname, -1)
 		config.AppConfigSet(name, "git", "post-update-hash", util.Hash(template))
 
 		err = ioutil.WriteFile(generated, []byte(template), 0755)
