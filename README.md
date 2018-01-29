@@ -56,11 +56,41 @@ go build
 sudo service gohive restart
 ```
 
+## Application development
+When building or running the application, following environment variables should be used.
+* HOST: Host which the application should listen to. Generally it would be `127.0.0.1`
+* PORT: The corresponding port. So far it begins from 2000 and has a limitation of 1024.
+* HOST_PORT: Combined host and port, `$HOST:$PORT`.
+* DB_HOST: Maria database host.
+* DB_NAME: Database name.
+* DB_USERNAME: Database connection username.
+* DB_PASSWORD: Database connection password.
+
+### hello-world example (without database connect)
+```golang
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"os"
+)
+
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello, you've requested: %s\n", r.URL.Path)
+	})
+
+	http.ListenAndServe(os.Getenv("HOST_PORT"), nil)
+}
+```
+
+
 ## TODO List
 1. Better Web UI
 2. Nginx SSL support
 3. Mysql support
-4. CPU/Mem/Disk Usage quota
+4. CPU/Memory/Disk/Databse usage quota
 
 
 ## Customize
