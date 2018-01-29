@@ -66,7 +66,7 @@ When building or running the application, following environment variables should
 * DB_USERNAME: Database connection username.
 * DB_PASSWORD: Database connection password.
 
-### hello-world example (without database connect)
+### hello-world example (without database connection)
 ```golang
 package main
 
