@@ -54,7 +54,7 @@ func (s *systemd) Create(name string) api.Status {
 		errs = append(errs, string(stdout))
 	}
 
-	cmd = exec.Command("systemctl", "start", unixname)
+	cmd = exec.Command("systemctl", "restart", unixname)
 	if stdout, err := cmd.CombinedOutput(); err != nil {
 		errs = append(errs, string(stdout))
 	}
