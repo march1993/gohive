@@ -48,6 +48,7 @@ const (
 )
 
 func updateSudoer() {
+	fmt.Print("Updating sudoers policy ...")
 	bytes, err := ioutil.ReadFile(SUDOER_TEMPLATE)
 	if err != nil {
 		panic(err.Error())
@@ -62,4 +63,5 @@ func updateSudoer() {
 	if err != nil {
 		panic(err.Error())
 	}
+	fmt.Println(" [ok]")
 }
