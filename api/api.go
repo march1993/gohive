@@ -51,6 +51,9 @@ const (
 
 	// systemd
 	SYSTEMD_SERVICE_EXPIRED = "SYSTEMD_SERVICE_EXPIRED"
+
+	// nginx
+	NGINX_CONF_EXPIRED = "NGINX_CONF_EXPIRED"
 )
 
 type Credential struct {

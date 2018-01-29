@@ -79,7 +79,7 @@ func (n *nginx) Create(name string) api.Status {
 	content = strings.Replace(content, "{{ServerName}}", ServerName, -1)
 	content = strings.Replace(content, "{{ProxyPass}}", ProxyPass, -1)
 
-	config.AppConfigSet(name, "nginx", "hash", util.Hash(content))
+	config.AppConfigSet(name, "nginx", "hash", util.Hash(content+config.Get("server_name", "_")))
 	output := config.GetDataDir(name) + "/nginx.conf"
 	err = ioutil.WriteFile(output, []byte(content), 0644)
 	if err != nil {
@@ -103,8 +103,8 @@ func (n *nginx) Remove(name string) api.Status {
 func (n *nginx) Status(name string) api.Status {
 
 	hash := config.AppConfigGet(name, "nginx", "hash", "")
-	output := config.GetDataDir(name) + "/nginx.conf"
 
+	output := config.GetDataDir(name) + "/nginx.conf"
 	bytes, err := ioutil.ReadFile(output)
 	if err != nil {
 		return api.Status{
@@ -113,10 +113,10 @@ func (n *nginx) Status(name string) api.Status {
 		}
 	}
 
-	if hash != util.Hash(string(bytes)) || "" == hash {
+	if hash != util.Hash(string(bytes)+config.Get("server_name", "_")) || "" == hash {
 		return api.Status{
 			Status: api.STATUS_FAILURE,
-			Reason: api.PROFILE_BASHRC_EXPIRED,
+			Reason: api.NGINX_CONF_EXPIRED,
 		}
 	}
 
