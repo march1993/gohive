@@ -2,16 +2,14 @@
 Description={{Description}}
 After=network.target
 Wants=network.target
-StandardOutput=null
-StandardError=null
 
 [Service]
 ExecStart=/bin/bash -l -c "exec {{ExecStart}}"
 WorkingDirectory={{WorkingDirectory}}
 User={{User}}
 Group={{Group}}
-Restart=always
-RestartSec=20
+Restart=on-failure
+RestartSec=60s
 
 [Install]
 WantedBy=multi-user.target
