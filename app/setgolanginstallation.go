@@ -21,9 +21,6 @@ func setGolangInstallation(c echo.Context, request interface{}) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, api.Status{
-		Status: api.STATUS_SUCCESS,
-		Result: golang.SetGolangInstallation(req.Version),
-	})
+	return c.JSON(http.StatusOK, golang.SetGolangInstallation(req.Version))
 
 }

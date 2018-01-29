@@ -22,9 +22,6 @@ func setGitKeys(c echo.Context, request interface{}) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, api.Status{
-		Status: api.STATUS_SUCCESS,
-		Result: git.SetGitKeys(req.App, req.Keys),
-	})
+	return c.JSON(http.StatusOK, git.SetGitKeys(req.App, req.Keys))
 
 }

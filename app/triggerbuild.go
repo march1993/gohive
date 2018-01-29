@@ -3,16 +3,16 @@ package app
 import (
 	"github.com/labstack/echo"
 	"github.com/march1993/gohive/api"
-	"github.com/march1993/gohive/module"
+	"github.com/march1993/gohive/module/golang"
 	"net/http"
 )
 
-type createAppRequest struct {
+type triggerBuildRequest struct {
 	App string
 }
 
-func createApp(c echo.Context, request interface{}) error {
-	req := *request.(*createAppRequest)
+func triggerBuild(c echo.Context, request interface{}) error {
+	req := *request.(*triggerBuildRequest)
 
 	if checkName(req.App) == false {
 		return c.JSON(http.StatusOK, api.Status{
@@ -21,6 +21,6 @@ func createApp(c echo.Context, request interface{}) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, module.CreateApp(req.App))
+	return c.JSON(http.StatusOK, golang.TriggerBuild(req.App))
 
 }

@@ -21,9 +21,6 @@ func getGitKeys(c echo.Context, request interface{}) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, api.Status{
-		Status: api.STATUS_SUCCESS,
-		Result: git.GetGitKeys(req.App),
-	})
+	return c.JSON(http.StatusOK, git.GetGitKeys(req.App))
 
 }
