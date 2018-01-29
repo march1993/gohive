@@ -2,7 +2,7 @@
 
 mkdir -p $HOME/workspace
 cd $HOME/workspace
-GIT_DIR=./git git init .
+GIT_DIR=./.git git init .
 git pull $HOME/repo.git
 git checkout master
 
