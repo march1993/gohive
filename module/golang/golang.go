@@ -220,3 +220,57 @@ func SetGolangInstallation(version string) api.Status {
 
 	return api.Status{Status: api.STATUS_SUCCESS}
 }
+
+func TriggerBuild(name string) api.Status {
+	unixname := config.APP_PREFIX + name
+
+	stdout, err := exec.Command("runuser",
+		unixname,
+		"-s", "/bin/bash",
+		"-c", "~/repo.git/hooks/post-update",
+	).CombinedOutput()
+
+	if err != nil {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: string(stdout),
+		}
+	} else {
+		return api.Status{
+			Status: api.STATUS_SUCCESS,
+		}
+	}
+}
+
+type GetLastBuildResult struct {
+	Stdout string
+	Stderr string
+}
+
+func GetLastBuild(name string) api.Status {
+
+	errs := []string{}
+	stdout, err := ioutil.ReadFile(config.GetHomeDir(name) + "/lastbuild.stdout")
+	if err != nil {
+		errs = append(errs, string(stdout))
+	}
+
+	stderr, err := ioutil.ReadFile(config.GetHomeDir(name) + "/lastbuild.stderr")
+	if err != nil {
+		errs = append(errs, string(stdout))
+	}
+
+	if len(errs) > 0 {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: strings.Join(errs, "\n"),
+		}
+	} else {
+		return api.Status{
+			Status: api.STATUS_SUCCESS,
+			Result: GetLastBuildResult{
+				Stdout: string(stdout),
+				Stderr: string(stderr),
+			}}
+	}
+}
