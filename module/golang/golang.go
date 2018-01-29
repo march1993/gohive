@@ -226,7 +226,7 @@ func TriggerBuild(name string) api.Status {
 
 	stdout, err := exec.Command("runuser",
 		unixname,
-		"-s", "/bin/bash",
+		"-l",
 		"-c", "~/repo.git/hooks/post-update",
 	).CombinedOutput()
 
@@ -238,6 +238,7 @@ func TriggerBuild(name string) api.Status {
 	} else {
 		return api.Status{
 			Status: api.STATUS_SUCCESS,
+			Reason: string(stdout),
 		}
 	}
 }

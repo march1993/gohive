@@ -4,7 +4,7 @@ mkdir -p $HOME/workspace
 cd $HOME/workspace
 
 export GIT_DIR=./.git
-git init . || true
+git init .
 git pull $HOME/repo.git
 git checkout master
 
