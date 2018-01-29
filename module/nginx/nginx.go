@@ -89,7 +89,7 @@ func (n *nginx) Create(name string) api.Status {
 		}
 	}
 
-	return api.Status{Status: api.STATUS_SUCCESS}
+	return nginxReload()
 }
 
 func (n *nginx) Rename(oldName, newName string) api.Status {
