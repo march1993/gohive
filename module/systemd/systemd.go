@@ -127,9 +127,21 @@ func (s *systemd) Status(name string) api.Status {
 			Status: api.STATUS_FAILURE,
 			Reason: api.PROFILE_BASHRC_EXPIRED,
 		}
-	} else {
-		return api.Status{Status: api.STATUS_SUCCESS}
 	}
+
+	cmd := exec.Command("systemctl", "status", unixname)
+	if stdout, err := cmd.CombinedOutput(); err != nil {
+		return api.Status{
+			Status: api.STATUS_FAILURE,
+			Reason: string(stdout),
+		}
+	} else {
+		return api.Status{
+			Status: api.STATUS_SUCCESS,
+			Result: string(stdout),
+		}
+	}
+
 }
 
 func (s *systemd) Repair(name string) api.Status {
