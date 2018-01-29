@@ -10,6 +10,7 @@ User={{User}}
 Group={{Group}}
 Restart=on-failure
 RestartSec=20
+{{Environment}}
 
 [Install]
 WantedBy=multi-user.target
