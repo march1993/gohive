@@ -39,7 +39,6 @@ func (s *systemd) Create(name string) api.Status {
 	generated = strings.Replace(generated, "{{WorkingDirectory}}", config.GetHomeDir(name), -1)
 	generated = strings.Replace(generated, "{{User}}", unixname, -1)
 	generated = strings.Replace(generated, "{{Group}}", config.APP_GROUP, -1)
-	generated = strings.Replace(generated, "{{Environment}}", getEnvironment(name), -1)
 
 	hash := util.Hash(generated)
 	config.AppConfigSet(name, "systemd", "hash", hash)
@@ -170,16 +169,4 @@ func (s *systemd) ListRemoved() []string {
 	}
 
 	return result
-}
-
-func getEnvironment(name string) string {
-	content := ""
-	for _, handler := range module.Environ {
-		kvs := handler(name)
-		for _, line := range kvs {
-			content += "Environment=" + line + "\n"
-		}
-	}
-
-	return content
 }

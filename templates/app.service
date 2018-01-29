@@ -4,13 +4,12 @@ After=network.target
 Wants=network.target
 
 [Service]
-ExecStart={{ExecStart}}
+ExecStart=/bin/bash -l "exec {{ExecStart}}"
 WorkingDirectory={{WorkingDirectory}}
 User={{User}}
 Group={{Group}}
 Restart=on-failure
 RestartSec=20
-{{Environment}}
 
 [Install]
 WantedBy=multi-user.target
