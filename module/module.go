@@ -20,10 +20,10 @@ type moduleItem struct {
 }
 
 var Modules = []moduleItem{}
-var Environ = []func(name string) []string{}
+var Runcom = []func(name string) []string{}
 
-func RegisterEnviron(handler func(name string) []string) {
-	Environ = append(Environ, handler)
+func RegisterRuncom(handler func(name string) []string) {
+	Runcom = append(Runcom, handler)
 }
 
 func RegisterModule(name string, module Module) {

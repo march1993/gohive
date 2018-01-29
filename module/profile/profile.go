@@ -27,7 +27,7 @@ func (p *profile) Create(name string) api.Status {
 	}
 	content := string(bytes)
 
-	for _, handler := range module.Environ {
+	for _, handler := range module.Runcom {
 		kvs := handler(name)
 		for _, line := range kvs {
 			content += line + "\n"

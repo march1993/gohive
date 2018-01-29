@@ -18,7 +18,7 @@ type golang struct{}
 
 func init() {
 	module.RegisterModule("golang", &golang{})
-	module.RegisterEnviron(environHandler)
+	module.RegisterRuncom(runcomHandler)
 	if err := os.MkdirAll(config.GOLANG_DIR, config.GOLANG_DIR_PERM); err != nil {
 		panic(err.Error())
 	}
@@ -31,15 +31,15 @@ func init() {
 
 }
 
-func environHandler(name string) []string {
+func runcomHandler(name string) []string {
 
 	version := config.AppConfigGet(name, "golang", "version", "")
 	goroot := config.GOLANG_DIR + "/" + GO_PREFIX + version
 
 	return []string{
-		"GOPATH=" + config.GOLANG_GOPATH,
-		"GOROOT=" + goroot,
-		"PATH=$GOROOT/bin:$PATH",
+		"export GOPATH=" + config.GOLANG_GOPATH,
+		"export GOROOT=" + goroot,
+		"export PATH=$GOROOT/bin:$PATH",
 	}
 }
 
