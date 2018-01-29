@@ -2,8 +2,8 @@
 
 mkdir -p $HOME/workspace
 cd $HOME/workspace
-git init .
+GIT_DIR=./git git init .
 git pull $HOME/repo.git
 git checkout master
 
-go build -o ../output.exe > ../lastbuild.stdout 2> ../lastbuild.stdout
+go build -o ../output.exe > ../lastbuild.stdout 2> ../lastbuild.stderr
