@@ -21,16 +21,16 @@ func init() {
 }
 
 const (
-	serviceFilename  = "gohive.service"
-	serviceTemplate  = "./templates/" + serviceFilename
-	serviceGenerated = "./generated/" + serviceFilename
-	systemdOutput    = "/lib/systemd/system/gohive.service"
+	SERVICE_FILENAME       = "gohive.service"
+	SERVICE_TEMPLATE       = "./templates/" + SERVICE_FILENAME
+	SERVICE_GENERATED      = "./generated/" + SERVICE_FILENAME
+	SERVICE_SYSTEMD_OUTPUT = "/lib/systemd/system/gohive.service"
 )
 
 func RegisterService() {
 
 	fmt.Print("Generating systemd service file...")
-	bytes, err := ioutil.ReadFile(serviceTemplate)
+	bytes, err := ioutil.ReadFile(SERVICE_TEMPLATE)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -38,17 +38,17 @@ func RegisterService() {
 	content := string(bytes)
 	content = Replace(content, "{{ExecStart}}", ExecStart, -1)
 	content = Replace(content, "{{WorkingDirectory}}", WorkingDirectory, -1)
-	if err = ioutil.WriteFile(serviceGenerated, []byte(content), 0644); err != nil {
+	if err = ioutil.WriteFile(SERVICE_GENERATED, []byte(content), 0644); err != nil {
 		panic(err.Error())
 	}
 	fmt.Println(" [ok]")
 
 	fmt.Print("Creating symbol link for systemd...")
-	if abs, err := filepath.Abs(serviceGenerated); err != nil {
+	if abs, err := filepath.Abs(SERVICE_GENERATED); err != nil {
 		panic(err.Error())
-	} else if err := os.Remove(systemdOutput); err != nil {
+	} else if err := os.Remove(SERVICE_SYSTEMD_OUTPUT); err != nil {
 		panic(err.Error())
-	} else if err := os.Symlink(abs, systemdOutput); err != nil {
+	} else if err := os.Symlink(abs, SERVICE_SYSTEMD_OUTPUT); err != nil {
 		panic(err.Error())
 	}
 	fmt.Println(" [ok]")

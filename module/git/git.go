@@ -44,7 +44,11 @@ func (g *git) Create(name string) api.Status {
 	if err != nil {
 		errs = append(errs, err.Error())
 	} else {
-		err = ioutil.WriteFile(generated, bytes, 0755)
+		template := string(bytes)
+		template = strings.Replace(template, "{{GOLANG_EXECUTABLE}}", config.GOLANG_EXECUTABLE, -1)
+		config.AppConfigSet(name, "git", "post-update-hash", util.Hash(template))
+
+		err = ioutil.WriteFile(generated, []byte(template), 0755)
 
 		if err != nil {
 			errs = append(errs, err.Error())
@@ -85,14 +89,15 @@ func (g *git) Status(name string) api.Status {
 		errs = append(errs, string(stdout))
 	}
 
-	generated, _ := ioutil.ReadFile(config.GetHomeDir(name) + gitPostUpdateGenerated)
-	template, err := ioutil.ReadFile(gitPostUpdateTemplate)
+	bytes, _ := ioutil.ReadFile(config.GetHomeDir(name) + gitPostUpdateGenerated)
+	hash := config.AppConfigGet(name, "git", "post-update-hash", "")
+
 	if err != nil {
 		errs = append(errs, err.Error())
 	} else {
 
-		if util.Hash(string(template)) != util.Hash(string(generated)) {
-			errs = append(errs, "Git hook file is incorrect.")
+		if hash != util.Hash(string(bytes)) || "" == hash {
+			errs = append(errs, api.GIT_POST_UPDATE_EXPIRED)
 		}
 	}
 

@@ -8,4 +8,4 @@ git init .
 git pull $HOME/repo.git
 git checkout master
 
-go build -o ../output.exe > ../lastbuild.stdout 2> ../lastbuild.stderr
+go build -o $HOME/{{GOLANG_EXECUTABLE}} > ../lastbuild.stdout 2> ../lastbuild.stderr

@@ -68,10 +68,10 @@ func (p *profile) Status(name string) api.Status {
 		}
 	}
 
-	if hash != util.Hash(string(bytes)) {
+	if hash != util.Hash(string(bytes)) || "" == hash {
 		return api.Status{
 			Status: api.STATUS_FAILURE,
-			Reason: api.PROFILE_BASHRC_EXPIRED,
+			Reason: api.SYSTEMD_SERVICE_EXPIRED,
 		}
 	} else {
 		return api.Status{Status: api.STATUS_SUCCESS}

@@ -5,6 +5,8 @@ import (
 	"github.com/march1993/gohive/api"
 	. "github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
+	"github.com/march1993/gohive/util"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"os/user"
@@ -316,9 +318,10 @@ func (l *linux) ListRemoved() []string {
 	members := strings.Split(strings.Trim(string(stdout), "\n"), " ")
 
 	ret := []string{}
+	list := GetAppList()
 
 	for _, member := range members {
-		if l.Status(member).Status != api.STATUS_SUCCESS {
+		if !util.Includes(list, member) {
 			ret = append(ret, member)
 		}
 	}
@@ -326,4 +329,26 @@ func (l *linux) ListRemoved() []string {
 	// 2. TODO: list remaining process whose owner has been deleted
 
 	return ret
+}
+
+func GetAppList() []string {
+	result := []string{}
+
+	files, err := ioutil.ReadDir(APP_DIR)
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	for _, file := range files {
+		if file.IsDir() {
+			name := file.Name()
+
+			if !strings.HasSuffix(name, APP_DATA_SUFFIX) {
+				result = append(result, name)
+			}
+		}
+	}
+
+	return result
 }

@@ -29,7 +29,8 @@ const (
 
 // Golang setting
 const (
-	GOLANG_GOPATH = "$HOME/workspace:$HOME/workspace/vendor"
+	GOLANG_GOPATH     = "$HOME/workspace:$HOME/workspace/vendor"
+	GOLANG_EXECUTABLE = "output.exe"
 )
 
 /**

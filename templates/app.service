@@ -1,0 +1,15 @@
+[Unit]
+Description={{Description}}
+After=network.target
+Wants=network.target
+
+[Service]
+ExecStart={{ExecStart}}
+WorkingDirectory={{WorkingDirectory}}
+User={{User}}
+Group={{Group}}
+Restart=on-failure
+RestartSec=20
+
+[Install]
+WantedBy=multi-user.target
