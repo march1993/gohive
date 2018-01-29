@@ -252,12 +252,12 @@ func GetLastBuild(name string) api.Status {
 	errs := []string{}
 	stdout, err := ioutil.ReadFile(config.GetHomeDir(name) + "/lastbuild.stdout")
 	if err != nil {
-		errs = append(errs, string(stdout))
+		errs = append(errs, err.Error())
 	}
 
 	stderr, err := ioutil.ReadFile(config.GetHomeDir(name) + "/lastbuild.stderr")
 	if err != nil {
-		errs = append(errs, string(stdout))
+		errs = append(errs, err.Error())
 	}
 
 	if len(errs) > 0 {
