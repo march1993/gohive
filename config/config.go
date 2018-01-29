@@ -18,13 +18,16 @@ const (
 	GOLANG_DIR_O_USER  = 0           // GOLANG_DIR Owner
 	GOLANG_DIR_O_GROUP = 0           // GOLANG_DIR Group
 	SSH_SHELL          = "/bin/bash" // "/usr/bin/git-shell"
+
+	APP_N_LIMIT uint16 = 1024 // support maximum of 1Ki applications
 )
 
 // Linux setting
 const (
-	APP_PREFIX      = "gohive_app_"
-	APP_GROUP       = "gohive_app"
-	APP_DATA_SUFFIX = ".data"
+	APP_PREFIX             = "gohive_app_"
+	APP_GROUP              = "gohive_app"
+	APP_DATA_SUFFIX        = ".data"
+	APP_PORT_BEGIN  uint16 = 2000
 )
 
 // Golang setting
