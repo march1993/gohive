@@ -8,7 +8,7 @@ ExecStart=/bin/bash -l -c "exec {{ExecStart}}"
 WorkingDirectory={{WorkingDirectory}}
 User={{User}}
 Group={{Group}}
-Restart=on-failure
+Restart=always
 RestartSec=20
 
 [Install]
