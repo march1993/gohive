@@ -4,7 +4,7 @@ After=network.target
 Wants=network.target
 
 [Service]
-ExecStart=/bin/bash -l "exec {{ExecStart}}"
+ExecStart=/bin/bash -l -c "exec {{ExecStart}}"
 WorkingDirectory={{WorkingDirectory}}
 User={{User}}
 Group={{Group}}
