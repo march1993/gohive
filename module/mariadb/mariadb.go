@@ -41,6 +41,8 @@ func (m *mariadb) Create(name string) api.Status {
 	password := util.RandomString(32)
 	config.AppConfigSet(name, "mariadb", "db_password", password)
 
+	DB.Exec("REVOKE ALL PRIVILEGES FROM '" + unixname + "'@'localhost';")
+	DB.Exec("DROP USER '" + unixname + "'@'localhost';")
 	DB.Exec("CREATE USER '" + unixname + "'@'localhost' IDENTIFIED BY '" + password + "';")
 	DB.Exec("CREATE DATABASE " + unixname)
 	DB.Exec("GRANT ALL PRIVILEGES ON " + unixname + " . * TO '" + unixname + "'@'localhost';")
