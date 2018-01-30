@@ -69,11 +69,6 @@ func (g *git) Create(name string) api.Status {
 
 }
 
-func (g *git) Rename(oldName string, newName string) api.Status {
-	// do nothing
-	return api.Status{Status: api.STATUS_SUCCESS}
-}
-
 func (g *git) Remove(name string) api.Status {
 	// do nothing
 	return api.Status{Status: api.STATUS_SUCCESS}

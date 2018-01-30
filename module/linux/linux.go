@@ -58,57 +58,6 @@ func (l *linux) Create(name string) api.Status {
 	}
 }
 
-func (l *linux) Rename(oldName, newName string) api.Status {
-	if l.Status(oldName).Status != api.STATUS_SUCCESS {
-		return api.Status{
-			Status: api.STATUS_FAILURE,
-			Reason: api.REASON_CONDITION_UNMET,
-		}
-	} else if l.Status(newName).Reason != api.APP_NON_EXIST {
-		return api.Status{
-			Status: api.STATUS_FAILURE,
-			Reason: api.APP_ALREADY_OCCUPIED,
-		}
-	} else {
-
-		errs := []string{}
-		// 1. kill all process
-		if stdout, err := exec.Command("killall", "--user", APP_PREFIX+oldName).CombinedOutput(); err != nil {
-			if string(stdout) != "" {
-				errs = append(errs, string(stdout))
-			}
-		}
-
-		if stdout, err := exec.Command("killall", "-s", "9", "--user", APP_PREFIX+oldName).CombinedOutput(); err != nil {
-			if string(stdout) != "" {
-				errs = append(errs, string(stdout))
-			}
-		}
-
-		// 2. rename user
-		if stdout, err := exec.Command("usermod",
-			"-l", APP_PREFIX+newName,
-			"-m", "-d", GetHomeDir(newName),
-			APP_PREFIX+oldName).CombinedOutput(); err != nil {
-			errs = append(errs, string(stdout))
-		}
-
-		// 3. rename folders
-		if err := os.Rename(GetDataDir(oldName), GetDataDir(newName)); err != nil {
-			errs = append(errs, err.Error())
-		}
-
-		if len(errs) > 0 {
-			return api.Status{
-				Status: api.STATUS_FAILURE,
-				Reason: strings.Join(errs, "\n"),
-			}
-		} else {
-			return api.Status{Status: api.STATUS_SUCCESS}
-		}
-	}
-}
-
 func (l *linux) Remove(name string) api.Status {
 	if ret := l.Status(name); ret.Reason == api.APP_NON_EXIST {
 		return ret

@@ -6,7 +6,6 @@ import (
 
 type Module interface {
 	Create(name string) api.Status // create application
-	Rename(oldName string, newName string) api.Status
 	Remove(name string) api.Status // remove application
 	Status(name string) api.Status // show status
 	Repair(name string) api.Status // Repair an application when it's broken or copied to the hive directory
@@ -67,16 +66,6 @@ func RepairApp(app string) map[string]api.Status {
 
 	for _, item := range Modules {
 		ret[item.name] = item.module.Repair(app)
-	}
-
-	return ret
-}
-
-func RenameApp(oldName string, newName string) map[string]api.Status {
-	ret := map[string]api.Status{}
-
-	for _, item := range Modules {
-		ret[item.name] = item.module.Rename(oldName, newName)
 	}
 
 	return ret

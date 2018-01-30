@@ -69,18 +69,6 @@ func (s *systemd) Create(name string) api.Status {
 	}
 }
 
-func (s *systemd) Rename(oldName, newName string) api.Status {
-
-	if status := s.Remove(oldName); status.Status != api.STATUS_SUCCESS {
-		return status
-	}
-	if status := s.Create(newName); status.Status != api.STATUS_SUCCESS {
-		return status
-	}
-
-	return api.Status{Status: api.STATUS_SUCCESS}
-}
-
 func (s *systemd) Remove(name string) api.Status {
 	unixname := config.APP_PREFIX + name
 	errs := []string{}

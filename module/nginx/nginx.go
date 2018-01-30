@@ -92,10 +92,6 @@ func (n *nginx) Create(name string) api.Status {
 	return nginxReload()
 }
 
-func (n *nginx) Rename(oldName, newName string) api.Status {
-	return n.Repair(newName)
-}
-
 func (n *nginx) Remove(name string) api.Status {
 	return nginxReload()
 }

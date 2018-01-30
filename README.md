@@ -89,7 +89,7 @@ func main() {
 ## TODO List
 1. Better Web UI
 2. Nginx SSL support
-3. MariaDB support
+3. Migration (MariaDB importation/exportation)
 4. CPU/Memory/Disk/Databse usage quota
 
 

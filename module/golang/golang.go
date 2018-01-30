@@ -48,11 +48,6 @@ func (g *golang) Create(name string) api.Status {
 	return api.Status{Status: api.STATUS_SUCCESS}
 }
 
-func (g *golang) Rename(oldName, newName string) api.Status {
-	// do nothing
-	return api.Status{Status: api.STATUS_SUCCESS}
-}
-
 func (g *golang) Remove(name string) api.Status {
 	// do nothing
 	return api.Status{Status: api.STATUS_SUCCESS}

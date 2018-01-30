@@ -5,6 +5,7 @@ import (
 	"github.com/march1993/gohive/config"
 	"github.com/march1993/gohive/module"
 	_ "github.com/march1993/gohive/module/linux"
+	_ "github.com/march1993/gohive/module/mariadb"
 	"github.com/march1993/gohive/util"
 	"io/ioutil"
 )
@@ -42,11 +43,6 @@ func (p *profile) Create(name string) api.Status {
 		panic(err.Error())
 	}
 
-	return api.Status{Status: api.STATUS_SUCCESS}
-}
-
-func (p *profile) Rename(oldName, newName string) api.Status {
-	// do nothing
 	return api.Status{Status: api.STATUS_SUCCESS}
 }
 
