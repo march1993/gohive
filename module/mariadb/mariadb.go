@@ -7,8 +7,9 @@ import (
 	"github.com/march1993/gohive/config"
 	. "github.com/march1993/gohive/db"
 	"github.com/march1993/gohive/module"
-	_ "github.com/march1993/gohive/module/linux"
+	"github.com/march1993/gohive/module/linux"
 	"github.com/march1993/gohive/util"
+	"strings"
 )
 
 type mariadb struct{}
@@ -83,5 +84,34 @@ func (m *mariadb) Repair(name string) api.Status {
 }
 
 func (m *mariadb) ListRemoved() []string {
-	return []string{}
+	list := linux.GetAppList()
+	ret := []string{}
+
+	if rows, err := DB.Raw("SELECT User FROM mysql.user;").Rows(); err == nil {
+		defer rows.Close()
+		for rows.Next() {
+			var user string
+			rows.Scan(&user)
+
+			if strings.HasPrefix(user, config.APP_PREFIX) && !util.Includes(list, user) {
+				ret = append(ret, user)
+			}
+		}
+	}
+
+	if rows, err := DB.Raw("SELECT Grantee FROM information_schema.user_privileges;").Rows(); err != nil {
+		defer rows.Close()
+		for rows.Next() {
+			var grantee string
+			rows.Scan(&grantee)
+
+			user := grantee[1 : 1+strings.Index(grantee[1:], "'")]
+
+			if strings.HasPrefix(user, config.APP_PREFIX) && !util.Includes(list, user) && !util.Includes(ret, user) {
+				ret = append(ret, user)
+			}
+		}
+	}
+
+	return ret
 }
