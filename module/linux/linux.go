@@ -27,7 +27,7 @@ func init() {
 
 func (l *linux) Create(name string) api.Status {
 
-	if l.Status(name).Reason == api.APP_NON_EXIST {
+	if l.Status(name).Status != api.STATUS_SUCCESS {
 		unixname := APP_PREFIX + name
 
 		cmd := exec.Command("useradd",

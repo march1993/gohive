@@ -61,7 +61,8 @@ When building or running the application, following environment variables should
 * HOST: Host which the application should listen to. Generally it would be `127.0.0.1`
 * PORT: The corresponding port. So far it begins from 2000 and has a limitation of 1024.
 * HOST_PORT: Combined host and port, `$HOST:$PORT`.
-* DB_HOST: Maria database host.
+* DB_HOST: MariaDB host.
+* DB_PORT: MariaDB port.
 * DB_NAME: Database name.
 * DB_USERNAME: Database connection username.
 * DB_PASSWORD: Database connection password.

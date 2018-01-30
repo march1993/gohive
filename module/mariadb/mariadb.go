@@ -30,6 +30,7 @@ func runcomHandler(name string) []string {
 	return []string{
 		"export DB_HOST=" + DB_HOST,
 		"export DB_PORT=" + DB_PORT,
+		"export DB_NAME=" + unixname,
 		"export DB_USERNAME=" + unixname,
 		"export DB_PASSWORD=" + password,
 	}
