@@ -46,12 +46,14 @@ func RegisterService() {
 	fmt.Print("Creating symbol link for systemd...")
 	if abs, err := filepath.Abs(SERVICE_GENERATED); err != nil {
 		panic(err.Error())
-	} else if err := os.Remove(SERVICE_SYSTEMD_OUTPUT); err != nil {
-		// do nothing
-		fmt.Println("Unable to remove outdated systemd services. [Ignored]")
-	} else if err := os.Symlink(abs, SERVICE_SYSTEMD_OUTPUT); err != nil {
-		panic(err.Error())
+	} else {
+
+		os.Remove(SERVICE_SYSTEMD_OUTPUT)
+		if err := os.Symlink(abs, SERVICE_SYSTEMD_OUTPUT); err != nil {
+			panic(err.Error())
+		}
 	}
+
 	fmt.Println(" [ok]")
 
 	fmt.Print("Enabling and starting gohive service...")
