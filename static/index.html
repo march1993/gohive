@@ -117,7 +117,7 @@
 					this.create_warning = "APP名称或者token不能为空";
 					this.create_flag = true;
 				}
-				axios.post('http://vultr1.xuxuxu.me/app/createApp', {
+				axios.post('/app/createApp', {
 				    Token: this.token,
 				    App: this.app_name
 				})
@@ -136,7 +136,7 @@
 					this.list_warning = "token cannot be empty";
 					this.list_flag = true;
 				}
-				axios.post('http://vultr1.xuxuxu.me/app/getAppList', {
+				axios.post('/app/getAppList', {
 				    Token: this.token
 				})
 				.then((response) => {
@@ -151,7 +151,7 @@
 				});
 			},
 			RemoveAPP: function (app) {
-				axios.post('http://vultr1.xuxuxu.me/app/removeApp', {
+				axios.post('/app/removeApp', {
 				    Token: this.token,
 				    App: app
 				})
@@ -171,7 +171,7 @@
 					this.list_warning = "重命名不能为空";
 					setTimeout((function(){this.list_flag = false;}).bind(this),2000);
 				}
-				axios.post('http://vultr1.xuxuxu.me/app/renameApp', {
+				axios.post('/app/renameApp', {
 				    Token: this.token,
 				    OldName: this.list_noprefix[index],
 				    NewName: this.rename[index]
@@ -191,7 +191,7 @@
 					this.repair_flag = true;
 					setTimeout((function(){this.repair_flag = false;}).bind(this),2000);
 				}
-				axios.post('http://vultr1.xuxuxu.me/app/repairApp', {
+				axios.post('/app/repairApp', {
 				    Token: this.token,
 				    App: this.repair,
 				})
@@ -211,7 +211,7 @@
 					this.status_flag = true;
 					setTimeout((function(){this.status_flag = false;}).bind(this),2000);
 				}else{
-					axios.post('http://vultr1.xuxuxu.me/app/statusApp', {
+					axios.post('/app/statusApp', {
 					    Token: this.token,
 					    App: this.status_app,
 					})
