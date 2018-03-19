@@ -36,7 +36,7 @@ func (s *systemd) Create(name string) api.Status {
 	generated := string(bytes)
 	generated = strings.Replace(generated, "{{Description}}", "Systemd services for "+unixname, -1)
 	generated = strings.Replace(generated, "{{ExecStart}}", config.GetHomeDir(name)+"/"+config.GOLANG_EXECUTABLE, -1)
-	generated = strings.Replace(generated, "{{WorkingDirectory}}", config.GetHomeDir(name), -1)
+	generated = strings.Replace(generated, "{{WorkingDirectory}}", config.GetHomeDir(name)+"/"+config.APP_WORKSPACE, -1)
 	generated = strings.Replace(generated, "{{User}}", unixname, -1)
 	generated = strings.Replace(generated, "{{Group}}", config.APP_GROUP, -1)
 	generated = strings.Replace(generated, "{{RestartSec}}", config.APP_RESTART_INTERVAL, -1)

@@ -29,6 +29,7 @@ const (
 	APP_DATA_SUFFIX             = ".data"
 	APP_PORT_BEGIN       uint16 = 2000
 	APP_RESTART_INTERVAL        = "60s" // restart interval when the service fails
+	APP_WORKSPACE               = "workspace"
 )
 
 // Golang setting
